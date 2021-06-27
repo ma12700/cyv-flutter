@@ -21,8 +21,8 @@ class User {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        "email": 'mohamedsoliman@gmail.com',
-        "password": 'aPassword123@'
+        "email": "ahmedeid6842@gmail.com",
+        "password": "aPassword123!"
       }),
     );
     token = response.headers['x-auth-token'];

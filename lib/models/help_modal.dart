@@ -8,7 +8,7 @@ class Help {
 class HelpModel {
   static List<Help> helpContents = [
     Help("what is this App For ? ", "assets/images/help2.png",
-        "this application aims to make it easy for you to cast your vote in safe manner without any fraud and without forcing the user to vote for specific candidate.  "),
+        "this application aims to make it easy for you to cast your vote in safe manner without any fraud and without forcing the user to vote for specific candidate."),
     Help(
       "what is Features ? ",
       "assets/images/help1.png",
