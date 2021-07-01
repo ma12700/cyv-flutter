@@ -58,7 +58,7 @@ class _AuthFormStrState extends State<AuthForm> {
       });
       try {
         if (_authMode == AuthMode.Login) {
-          await User.login();
+          //await User.login();
           Navigator.of(context)
               .pushReplacementNamed(FaceRecognitionScreen.routeName);
         } else {

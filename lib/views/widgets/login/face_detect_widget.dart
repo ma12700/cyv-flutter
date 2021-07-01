@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cyv/models/language.dart';
 import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
@@ -6,6 +8,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:google_ml_vision/google_ml_vision.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 class FaceSetectWidget extends StatefulWidget {
   @override
@@ -19,6 +25,8 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
   List<Face> _faces = <Face>[];
   CameraController _camera;
   CameraLensDirection _direction = CameraLensDirection.front;
+  String text = "message";
+  File file = null;
   @override
   void initState() {
     super.initState();
@@ -49,10 +57,35 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
         final image = await _camera.takePicture();
         visionImage = GoogleVisionImage.fromFilePath(image?.path);
         _faces = await faceDetector.processImage(visionImage);
+        print('heree:ADVad');
+        print('heree' + _faces.length.toString());
         if (_faces.length == 1) {
-          _camera.dispose();
-          faceDetector.close();
-          Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
+          setState(() {
+            //file = File(image.path);
+            text = image.path;
+          });
+          await image.saveTo('./image.png');
+          var postUri = Uri.parse("https://cyv-app.herokuapp.com/run");
+          http.MultipartRequest request =
+              new http.MultipartRequest("POST", postUri);
+          request.fields['user'] = 'blah';
+          http.MultipartFile multipartFile =
+              await http.MultipartFile.fromPath('file', './image.png');
+          print('multipartfile');
+          print(multipartFile.contentType);
+          print(multipartFile.field);
+          print(multipartFile.filename);
+          print(multipartFile.length);
+          request.files.add(multipartFile);
+          http.StreamedResponse response = await request.send();
+          print(response.statusCode);
+          //var data = json.decode(response.body) as String;
+          setState(() {
+            text = text;
+          });
+          print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ');
+          print(text);
+          //Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
         } else {
           print(_faces.length);
         }
@@ -90,7 +123,9 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
         ButtonWidget(
           text: (lang == 'En' ? "Capture" : dictionary['Capture']),
           navigate: faceDetect,
-        )
+        ),
+        Text(text),
+        //file != null ? Image.file(file) : Text('null')
       ],
     );
   }
