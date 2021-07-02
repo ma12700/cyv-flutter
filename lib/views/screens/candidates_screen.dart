@@ -11,10 +11,10 @@ class CandidatesScreen extends StatefulWidget {
 }
 
 class _CandidatesScreenState extends State<CandidatesScreen> {
-  int trackIndex;
+  String trackID;
   // used when search about candidates
   void changeVisibility(String value) {
-    CandidatesModel.tracks[trackIndex].candidates.forEach((candidate) {
+    CandidatesModel.tracks[trackID].candidates.forEach((candidate) {
       if (candidate.name.toLowerCase().contains(value.toLowerCase())) {
         candidate.isVisible = true;
       } else {
@@ -45,13 +45,13 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    trackIndex = ModalRoute.of(context).settings.arguments;
+    trackID = ModalRoute.of(context).settings.arguments;
 
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(
           appBar: appBarWidget(setLanguage,
-              title: CandidatesModel.tracks[trackIndex].name),
+              title: CandidatesModel.tracks[trackID].name),
           body: Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListView(
@@ -62,13 +62,12 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                       child: SearchWidget(search: search)),
                   //     // list of candidates
                   Column(
-                    children: CandidatesModel.tracks[trackIndex].candidates
+                    children: CandidatesModel.tracks[trackID].candidates
                         .map((e) => Container(
                               child: e.isVisible
                                   ? CandidateCardWidget(
-                                      trackIndex,
-                                      CandidatesModel
-                                          .tracks[trackIndex].candidates
+                                      trackID,
+                                      CandidatesModel.tracks[trackID].candidates
                                           .indexOf(e))
                                   : Container(),
                             ))

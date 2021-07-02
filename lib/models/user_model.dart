@@ -12,6 +12,7 @@ class User {
   static bool isCandidature;
   static String etherumAddress;
   static String token;
+  static final String url = 'https://e-votingfci.herokuapp.com/';
   static Map<String, dynamic> otherAttributes;
   static login() async {
     var url = Uri.parse('https://e-votingfci.herokuapp.com/auth/login');
@@ -21,8 +22,8 @@ class User {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        "email": "ahmedeid6842@gmail.com",
-        "password": "aPassword123!"
+        "email": "mohammed@gmail.com",
+        "password": "123456"
       }),
     );
     token = response.headers['x-auth-token'];

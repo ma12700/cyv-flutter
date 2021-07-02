@@ -1,4 +1,4 @@
-import 'package:cyv/models/candidates_model.dart';
+/* import 'package:cyv/models/candidates_model.dart';
 import 'package:cyv/models/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -165,3 +165,4 @@ class _CandidatesWidgetState extends State<CandidatesWidget> {
     return ch;
   }
 }
+ */

@@ -26,7 +26,7 @@ class InfoPageModel {
   static Future<bool> fetchPages() async {
     try {
       pages.clear();
-      var url = Uri.parse('https://e-votingfci.herokuapp.com/infoPage/getPage');
+      var url = Uri.parse(User.url + 'infoPage/getPage');
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token

@@ -6,15 +6,16 @@ import 'package:cyv/views/widgets/candidates/resultInfo_widget.dart';
 import 'package:flutter/material.dart';
 
 class CandidateCardWidget extends StatelessWidget {
-  final int trackIndex, candidateIndex;
-  CandidateCardWidget(this.trackIndex, this.candidateIndex);
+  final String trackID;
+  final int candidateIndex;
+  CandidateCardWidget(this.trackID, this.candidateIndex);
   @override
   Widget build(BuildContext context) {
     Size deviseSize = MediaQuery.of(context).size;
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(CandidateProfileScreen.routeName,
-            arguments: [trackIndex, candidateIndex]);
+            arguments: [trackID, candidateIndex]);
       },
       child: Card(
         elevation: 16.0,
@@ -47,7 +48,7 @@ class CandidateCardWidget extends StatelessWidget {
                         Container(
                             margin: EdgeInsets.only(top: 75, bottom: 20),
                             child: Text(
-                              CandidatesModel.tracks[trackIndex]
+                              CandidatesModel.tracks[trackID]
                                   .candidates[candidateIndex].name,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -75,8 +76,8 @@ class CandidateCardWidget extends StatelessWidget {
                       border: Border.all(width: 4, color: Style.secondColor),
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: AssetImage(CandidatesModel.tracks[trackIndex]
-                              .candidates[candidateIndex].img),
+                          image: AssetImage(CandidatesModel
+                              .tracks[trackID].candidates[candidateIndex].img),
                           fit: BoxFit.fill)),
                 ),
               )

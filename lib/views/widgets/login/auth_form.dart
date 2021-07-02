@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/face_login_screen.dart';
+import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/login/auth_button_widget.dart';
 import 'package:cyv/views/widgets/login/confirmWidget.dart';
 import 'package:cyv/views/widgets/login/email_widget.dart';
@@ -49,23 +50,23 @@ class _AuthFormStrState extends State<AuthForm> {
     }
 
     Future<void> _submit() async {
-      /* if (!_formKey.currentState.validate()) {
+      if (!_formKey.currentState.validate()) {
         return;
       }
-      _formKey.currentState.save(); */
+      _formKey.currentState.save();
       setState(() {
         _isLoading = true;
       });
       try {
         if (_authMode == AuthMode.Login) {
-          //await User.login();
+          await User.login();
           Navigator.of(context)
               .pushReplacementNamed(FaceRecognitionScreen.routeName);
         } else {
           // Sign user up
         }
-        //Navigator.of(context)
-        // .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
       } on SocketException {
         _showErrorDialog('No Internet connection');
       } on TimeoutException catch (_) {

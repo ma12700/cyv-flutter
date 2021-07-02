@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cyv/models/language.dart';
 import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
@@ -19,7 +18,6 @@ class FaceSetectWidget extends StatefulWidget {
 }
 
 class _FaceSetectWidgetState extends State<FaceSetectWidget> {
-  Future<void> _initializeControllerFuture;
   final FaceDetector faceDetector = GoogleVision.instance.faceDetector();
   GoogleVisionImage visionImage;
   List<Face> _faces = <Face>[];
@@ -53,25 +51,38 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
   Future<void> faceDetect() async {
     try {
       if (!_camera.value.isTakingPicture) {
-        await _initializeControllerFuture;
         final image = await _camera.takePicture();
         visionImage = GoogleVisionImage.fromFilePath(image?.path);
         _faces = await faceDetector.processImage(visionImage);
         print('heree:ADVad');
         print('heree' + _faces.length.toString());
         if (_faces.length == 1) {
-          setState(() {
-            //file = File(image.path);
-            text = image.path;
-          });
-          await image.saveTo('./image.png');
+          file = File(image.path);
           var postUri = Uri.parse("https://cyv-app.herokuapp.com/run");
-          http.MultipartRequest request =
+          var stream = new http.ByteStream(file.openRead());
+          stream.cast();
+          var length = await file.length();
+
+          var request = new http.MultipartRequest("POST", postUri);
+          var multipartFile = new http.MultipartFile('file', stream, length,
+              filename: file.path.split('/').last,
+              contentType: new MediaType('image', file.path.split('.').last));
+          //contentType: new MediaType('image', 'png'));
+
+          request.files.add(multipartFile);
+          var response = await request.send();
+          print(response.statusCode);
+          response.stream.transform(utf8.decoder).listen((value) {
+            print(value);
+          });
+          /* http.MultipartRequest request =
               new http.MultipartRequest("POST", postUri);
           request.fields['user'] = 'blah';
+          request.headers["Content-Type"] = "multipart/form-data";
           http.MultipartFile multipartFile =
-              await http.MultipartFile.fromPath('file', './image.png');
+              await http.MultipartFile.fromPath('file', file.path);
           print('multipartfile');
+          print(file.existsSync());
           print(multipartFile.contentType);
           print(multipartFile.field);
           print(multipartFile.filename);
@@ -80,15 +91,16 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
           http.StreamedResponse response = await request.send();
           print(response.statusCode);
           //var data = json.decode(response.body) as String;
-          setState(() {
+          /* setState(() {
             text = text;
-          });
+          }); */
           print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ');
-          print(text);
+          print(text); */
           //Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
-        } else {
-          print(_faces.length);
         }
+        /*  else {
+          print(_faces.length);
+        } */
       }
     } catch (e) {
       print(e);

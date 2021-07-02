@@ -11,12 +11,13 @@ class TracksWidget extends StatelessWidget {
   final bool isCandidature;
 
   TracksWidget({this.isCandidature = false});
+  final keys = CandidatesModel.tracks.keys.toList();
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
-        itemCount: CandidatesModel.tracks.length,
+        itemCount: keys.length,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200,
           childAspectRatio: 4 / 6,
@@ -24,12 +25,12 @@ class TracksWidget extends StatelessWidget {
           mainAxisSpacing: 20,
         ),
         itemBuilder: (_, index) {
-          final Track track = CandidatesModel.tracks[index];
+          final Track track = CandidatesModel.tracks[keys[index]];
           return InkWell(
             onTap: () {
               Navigator.of(context).pushNamed(
                   isCandidature ? Forms.routeName : CandidatesScreen.routeName,
-                  arguments: index);
+                  arguments: keys[index]);
             },
             child: Card(
               elevation: 6,

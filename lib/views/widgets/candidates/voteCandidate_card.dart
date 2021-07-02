@@ -4,17 +4,17 @@ import 'package:cyv/models/style.dart';
 import 'package:flutter/material.dart';
 
 class VoteCandidateCard extends StatelessWidget {
-  final int trackIndex;
+  final String trackID;
   final int candidateIndex;
   final Function vote;
-  VoteCandidateCard(this.trackIndex, this.candidateIndex, this.vote);
+  VoteCandidateCard(this.trackID, this.candidateIndex, this.vote);
 
   @override
   Widget build(BuildContext context) {
     Candidate candidate =
-        CandidatesModel.tracks[trackIndex].candidates[candidateIndex];
-    final bool flag = CandidatesModel.tracks[trackIndex].selected.length <
-        CandidatesModel.tracks[trackIndex].numberOfWinners;
+        CandidatesModel.tracks[trackID].candidates[candidateIndex];
+    final bool flag = CandidatesModel.tracks[trackID].votes.length <
+        CandidatesModel.tracks[trackID].numberOfWinners;
     final Color cardColor = (candidate.isSelected)
         ? Style.primaryColor
         : flag

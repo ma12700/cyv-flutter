@@ -13,13 +13,14 @@ class VoteWidget extends StatefulWidget {
 class _VoteWidgetState extends State<VoteWidget> {
   int _trackIndex = 0;
   int n = CandidatesModel.tracks.length;
+  var keys = CandidatesModel.tracks.keys.toList();
   final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return ListView(
       children: [
-        TitleCard(CandidatesModel.tracks[_trackIndex].name),
+        TitleCard(CandidatesModel.tracks[keys[_trackIndex]].name),
         Container(
           height: size.height * 0.4,
           child: ListView.builder(
@@ -27,7 +28,7 @@ class _VoteWidgetState extends State<VoteWidget> {
               controller: scrollController,
               itemCount: CandidatesModel.tracks[_trackIndex].candidates.length,
               itemBuilder: (context, index) {
-                return VoteCandidateCard(_trackIndex, index, vote);
+                return VoteCandidateCard(keys[_trackIndex], index, vote);
               }),
         ),
         SizedBox(
@@ -73,18 +74,19 @@ class _VoteWidgetState extends State<VoteWidget> {
                   text: _trackIndex == n - 1
                       ? (lang == 'En' ? 'Cast Vote' : dictionary['CV'])
                       : (lang == 'En' ? 'Next' : dictionary['Next']),
-                  navigate: CandidatesModel
-                              .tracks[_trackIndex].selected.length ==
-                          CandidatesModel.tracks[_trackIndex].numberOfWinners
-                      ? () {
-                          if (_trackIndex != n - 1) {
-                            setState(() {
-                              changeTrack(true);
-                              scrollController.jumpTo(0);
-                            });
-                          }
-                        }
-                      : null)
+                  navigate:
+                      CandidatesModel.tracks[keys[_trackIndex]].votes.length ==
+                              CandidatesModel
+                                  .tracks[keys[_trackIndex]].numberOfWinners
+                          ? () {
+                              if (_trackIndex != n - 1) {
+                                setState(() {
+                                  changeTrack(true);
+                                  scrollController.jumpTo(0);
+                                });
+                              }
+                            }
+                          : null)
             ],
           ),
         ),
@@ -107,9 +109,9 @@ class _VoteWidgetState extends State<VoteWidget> {
     setState(() {
       candidate.isSelected = !candidate.isSelected;
       if (candidate.isSelected) {
-        CandidatesModel.tracks[_trackIndex].selected.add(candidate.id);
+        CandidatesModel.tracks[keys[_trackIndex]].votes.add(candidate.id);
       } else {
-        CandidatesModel.tracks[_trackIndex].selected
+        CandidatesModel.tracks[keys[_trackIndex]].votes
             .removeWhere((element) => element == candidate.id);
       }
     });

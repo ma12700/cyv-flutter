@@ -22,12 +22,12 @@ class CandidateProfileScreenState extends State<CandidateProfileScreen> {
   @override
   Widget build(BuildContext context) {
     // get candidate index
-    final indexes = ModalRoute.of(context).settings.arguments as List<int>;
-    final int trackIndex = indexes[0];
-    final int candidateIndex = indexes[1];
+    final indexes = ModalRoute.of(context).settings.arguments as List<dynamic>;
+    final String trackID = indexes[0] as String;
+    final int candidateIndex = indexes[1] as int;
 
     Candidate candidate =
-        CandidatesModel.tracks[trackIndex].candidates[candidateIndex];
+        CandidatesModel.tracks[trackID].candidates[candidateIndex];
 
     final double height = MediaQuery.of(context).size.height;
 
@@ -99,7 +99,7 @@ class CandidateProfileScreenState extends State<CandidateProfileScreen> {
                   ),
                   //his track
                   Text(
-                    CandidatesModel.tracks[trackIndex].name,
+                    CandidatesModel.tracks[trackID].name,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
