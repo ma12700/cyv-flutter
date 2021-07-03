@@ -76,7 +76,7 @@ class CandidateCardWidget extends StatelessWidget {
                       border: Border.all(width: 4, color: Style.secondColor),
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: AssetImage(CandidatesModel
+                          image: NetworkImage(CandidatesModel
                               .tracks[trackID].candidates[candidateIndex].img),
                           fit: BoxFit.fill)),
                 ),

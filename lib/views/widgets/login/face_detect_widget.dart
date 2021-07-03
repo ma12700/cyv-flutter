@@ -48,7 +48,8 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
 
   void onComplete(result) {
     if (result == "matched") {
-      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
     } else {
       setState(() {
         print('here ' + result);

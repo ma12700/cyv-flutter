@@ -50,7 +50,7 @@ class CandidateProfileScreenState extends State<CandidateProfileScreen> {
               height: 200.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(candidate.img), fit: BoxFit.fill),
+                    image: NetworkImage(candidate.img), fit: BoxFit.fill),
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(20),
                   bottomLeft: Radius.circular(20),

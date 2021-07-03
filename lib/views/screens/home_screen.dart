@@ -52,7 +52,6 @@ class HomeScreenState extends State<HomeScreen> {
   Widget bodyWidget() {
     switch (bodywidget) {
       case 'Home':
-        InfoPageModel.pages.clear();
         return InfoPageModel.pages.isNotEmpty
             ? PagesWidget()
             : future(InfoPageModel.fetchPages, PagesWidget());

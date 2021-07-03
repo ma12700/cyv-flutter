@@ -22,7 +22,7 @@ class Track {
   final int numberOfWinners;
   List<Candidate> candidates = [];
   List<String> votes = [];
-  Track(this.name, this.dividedBy, this.numberOfWinners);
+  Track(this.name, this.dividedBy, this.numberOfWinners, this.candidates);
 }
 
 class CandidatesModel {
@@ -32,52 +32,52 @@ class CandidatesModel {
   static Map<String, Track> tracks = {};
 
   static Future<bool> fetchTracks() async {
-    try {
-      tracks.clear();
-      var url = Uri.parse(User.baseUrl + 'track/getTrack');
-      final response = await http.get(url, headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': User.token
-      });
-      var data = json.decode(response.body);
-      data.forEach((track) {
-        tracks[track['_id']] = Track(
-            track['title'], track['dividedBy'], (track['NofWinners'] as int));
-      });
-    } catch (e) {
-      print('error: ');
-      print(e.toString());
-    }
+    tracks.clear();
+    var url = Uri.parse(User.baseUrl + 'track/getTrack');
+    final response = await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-auth-token': User.token
+    });
+    var data = json.decode(response.body);
+    data.forEach((track) {
+      tracks[track['_id']] = Track(
+          track['title'], track['dividedBy'], (track['NofWinners'] as int), []);
+    });
+
     return true;
   }
 
   static Future<bool> fetchCandidates(String trackID) async {
     try {
-      tracks.clear();
       var url = Uri.parse(User.baseUrl +
           'candidate/getCandidate/?trackID=' +
           trackID +
-          'dividedBy=' +
-          User.otherAttributes[trackID]);
+          '&dividedBy=' +
+          User.otherAttributes[tracks[trackID].dividedBy]);
+      print('url : ' + url.toString());
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token
       });
       var data = json.decode(response.body);
       tracks[trackID].candidates = [];
-      data.forEach((candidate) {
+      (data as List<dynamic>).forEach((cand) {
+        var candidate = cand as Map<String, dynamic>;
+        var data = candidate['_id'] as Map<String, dynamic>;
+        print(candidate);
+        print(data);
         tracks[trackID].candidates.add(Candidate(
-            candidate['_id'],
-            candidate['name'],
-            candidate['image'],
+            candidate['_id']['_id'],
+            candidate['_id']['name'],
+            candidate['_id']['image'],
             0,
             candidate['facebookURL'],
-            candidate['twitterUrl'],
+            candidate['twitterURL'],
             candidate['program']));
       });
+      print(tracks[trackID].candidates[0].name);
     } catch (e) {
-      print('error: ');
-      print(e.toString());
+      print('error ' + e);
     }
     return true;
   }

@@ -12,7 +12,6 @@ class PagesWidget extends StatelessWidget {
           itemCount: InfoPageModel.pages.length,
           itemBuilder: (context, index) {
             var page = InfoPageModel.pages[index];
-            print(page.mainImg);
             return InkWell(
               onTap: () {
                 Navigator.of(context)

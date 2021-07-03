@@ -36,6 +36,17 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     });
   }
 
+  Widget loadCandidates() {
+    return FutureBuilder(
+        future: CandidatesModel.fetchCandidates(trackID),
+        builder: (ctx, fetchResultSnapshot) =>
+            fetchResultSnapshot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : listOfCandidates());
+  }
+
   @override
   void dispose() {
     // return all unvisible candidate to normal state before leave page
@@ -46,45 +57,41 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   @override
   Widget build(BuildContext context) {
     trackID = ModalRoute.of(context).settings.arguments;
-
+    print(trackID);
+    print(CandidatesModel.tracks[trackID]);
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(
             appBar: appBarWidget(setLanguage,
                 title: CandidatesModel.tracks[trackID].name),
-            body: FutureBuilder(
-              future: CandidatesModel.fetchCandidates(trackID),
-              builder: (ctx, fetchResultSnapshot) =>
-                  fetchResultSnapshot.connectionState == ConnectionState.waiting
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: ListView(
-                            children: [
-                              // search widget
-                              Container(
-                                  margin: EdgeInsets.all(10),
-                                  child: SearchWidget(search: search)),
-                              //     // list of candidates
-                              Column(
-                                children:
-                                    CandidatesModel.tracks[trackID].candidates
-                                        .map((e) => Container(
-                                              child: e.isVisible
-                                                  ? CandidateCardWidget(
-                                                      trackID,
-                                                      CandidatesModel
-                                                          .tracks[trackID]
-                                                          .candidates
-                                                          .indexOf(e))
-                                                  : Container(),
-                                            ))
-                                        .toList(),
-                              ),
-                            ],
-                          )),
-            )));
+            body: CandidatesModel.tracks[trackID].candidates.isEmpty
+                ? loadCandidates()
+                : listOfCandidates()));
+  }
+
+  Widget listOfCandidates() {
+    return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView(
+          children: [
+            // search widget
+            Container(
+                margin: EdgeInsets.all(10),
+                child: SearchWidget(search: search)),
+            //     // list of candidates
+            Column(
+              children: CandidatesModel.tracks[trackID].candidates
+                  .map((e) => Container(
+                        child: e.isVisible
+                            ? CandidateCardWidget(
+                                trackID,
+                                CandidatesModel.tracks[trackID].candidates
+                                    .indexOf(e))
+                            : Container(),
+                      ))
+                  .toList(),
+            ),
+          ],
+        ));
   }
 }

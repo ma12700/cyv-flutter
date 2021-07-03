@@ -15,7 +15,7 @@ class ProgramWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //Group's Members
-        Text(
+        /*Text(
           (lang == 'En' ? "Group's Members" : dictionary['GM']),
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -29,7 +29,7 @@ class ProgramWidget extends StatelessWidget {
           height: 6,
         ),
 
-        Container(
+         Container(
           height: 200,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -66,7 +66,7 @@ class ProgramWidget extends StatelessWidget {
         ),
         SizedBox(
           height: 20,
-        ),
+        ), */
         Text(
           (lang == 'En' ? "The Election Program" : dictionary['TEP']),
           style: TextStyle(

@@ -35,7 +35,7 @@ class PageContentScreenState extends State<PageContentScreen> {
               // title,paragraph,image
               switch (input.type) {
                 // title design
-                case 'title':
+                case 'Title':
                   return Padding(
                     padding: EdgeInsets.all(20),
                     child: Text(
@@ -59,13 +59,13 @@ class PageContentScreenState extends State<PageContentScreen> {
                   return Container(
                       margin: EdgeInsets.only(
                           bottom: 20, top: 20, left: 12, right: 12),
-                      height: 340,
                       width: double.infinity,
                       child: Image.network(
                         input.content,
+                        fit: BoxFit.fill,
                       ));
                 // paragraph design
-                case 'paragraph':
+                case 'Paragraph':
                   return Container(
                     margin: EdgeInsets.all(20),
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
