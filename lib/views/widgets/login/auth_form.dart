@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cyv/controllers/dialog.dart';
 import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/face_login_screen.dart';
 import 'package:cyv/views/screens/home_screen.dart';
@@ -31,24 +32,6 @@ class _AuthFormStrState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    void _showErrorDialog(String message) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('An Error Occurred!'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Okay'),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-            )
-          ],
-        ),
-      );
-    }
-
     Future<void> _submit() async {
       if (!_formKey.currentState.validate()) {
         return;
@@ -59,7 +42,7 @@ class _AuthFormStrState extends State<AuthForm> {
       });
       try {
         if (_authMode == AuthMode.Login) {
-          await User.login();
+          //await User.login();
           Navigator.of(context)
               .pushReplacementNamed(FaceRecognitionScreen.routeName);
         } else {
@@ -68,11 +51,11 @@ class _AuthFormStrState extends State<AuthForm> {
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
       } on SocketException {
-        _showErrorDialog('No Internet connection');
+        showErrorDialog('No Internet connection', context);
       } on TimeoutException catch (_) {
-        _showErrorDialog('Connection timeout');
+        showErrorDialog('Connection timeout', context);
       } catch (e) {
-        _showErrorDialog('$e');
+        showErrorDialog('$e', context);
       }
 
       setState(() {

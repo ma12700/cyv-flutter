@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -15,11 +17,30 @@ class User {
   static String program = "";
   static String facebookURL = "";
   static String twitterURL = "";
-  static final String url = 'https://e-votingfci.herokuapp.com/';
+  static final String baseUrl = 'https://e-votingfci.herokuapp.com/';
   static Map<String, dynamic> otherAttributes;
-  static login() async {
-    var url = Uri.parse('https://e-votingfci.herokuapp.com/auth/login');
-    var response = await http.post(
+
+  static Future<int> login(File file) async {
+    var url = Uri.parse(baseUrl + 'auth/login');
+    var stream = new http.ByteStream(file.openRead());
+    stream.cast();
+    var length = await file.length();
+
+    var request = new http.MultipartRequest("POST", url);
+    var multipartFile = new http.MultipartFile('file', stream, length,
+        filename: file.path.split('/').last,
+        contentType: new MediaType('image', file.path.split('.').last));
+
+    request.files.add(multipartFile);
+    request.fields
+        .addAll({"email": "mohammed@gmail.com", "password": "123456"});
+    var response = await request.send();
+    print(response.statusCode);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
+    return response.statusCode;
+    /* var response = await http.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -33,7 +54,7 @@ class User {
     if (token == null) {
       throw Exception();
     }
-    url = Uri.parse('https://e-votingfci.herokuapp.com/user/getMe');
+    url = Uri.parse(baseUrl + 'user/getMe');
     response = await http.get(url, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'x-auth-token': token
@@ -46,12 +67,20 @@ class User {
     id = data['_id'];
     isCandidature = data['isCandidature'];
     etherumAddress = data['etherumAddress'];
-    otherAttributes = data['statistics'][0];
+    otherAttributes = data['statistics'][0]; */
+  }
+
+  static Future<int> resetPassword() async {
+    var url = Uri.parse(baseUrl + 'auth/forgetPassword');
+    var response = await http.post(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    return response.statusCode;
   }
 
   static Future<bool> fetchProgram() async {
     try {
-      var url = Uri.parse(User.url + 'candidate/me');
+      var url = Uri.parse(baseUrl + 'candidate/me');
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token

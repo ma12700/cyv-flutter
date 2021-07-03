@@ -17,7 +17,7 @@ class RequirementsModel {
   static Future<bool> fetchRequirements() async {
     try {
       requirements.clear();
-      var url = Uri.parse(User.url + 'requirement/getRequirement');
+      var url = Uri.parse(User.baseUrl + 'requirement/getRequirement');
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token

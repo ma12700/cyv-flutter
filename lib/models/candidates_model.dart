@@ -34,7 +34,7 @@ class CandidatesModel {
   static Future<bool> fetchTracks() async {
     try {
       tracks.clear();
-      var url = Uri.parse(User.url + 'track/getTrack');
+      var url = Uri.parse(User.baseUrl + 'track/getTrack');
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token
@@ -54,7 +54,7 @@ class CandidatesModel {
   static Future<bool> fetchCandidates(String trackID) async {
     try {
       tracks.clear();
-      var url = Uri.parse(User.url +
+      var url = Uri.parse(User.baseUrl +
           'candidate/getCandidate/?trackID=' +
           trackID +
           'dividedBy=' +
@@ -85,7 +85,7 @@ class CandidatesModel {
   static Future<bool> waive() async {
     bool flag = false;
     try {
-      var url = Uri.parse(User.url + 'candidate/waive');
+      var url = Uri.parse(User.baseUrl + 'candidate/waive');
       await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token
@@ -100,7 +100,7 @@ class CandidatesModel {
   static Future<bool> vote() async {
     bool flag = false;
     try {
-      var url = Uri.parse(User.url + 'candidate/vote');
+      var url = Uri.parse(User.baseUrl + 'candidate/vote');
       await http.post(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token

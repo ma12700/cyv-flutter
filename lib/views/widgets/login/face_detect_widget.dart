@@ -1,15 +1,14 @@
 import 'dart:io';
 import 'package:cyv/models/language.dart';
+import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 
 class FaceSetectWidget extends StatefulWidget {
@@ -58,7 +57,11 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
         print('heree' + _faces.length.toString());
         if (_faces.length == 1) {
           file = File(image.path);
-          var postUri = Uri.parse("https://cyv-app.herokuapp.com/run");
+          int result = await User.login(file);
+          if (result == 200) {
+            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+          }
+          /* var postUri = Uri.parse("https://cyv-app.herokuapp.com/run");
           var stream = new http.ByteStream(file.openRead());
           stream.cast();
           var length = await file.length();
@@ -67,40 +70,17 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
           var multipartFile = new http.MultipartFile('file', stream, length,
               filename: file.path.split('/').last,
               contentType: new MediaType('image', file.path.split('.').last));
-          //contentType: new MediaType('image', 'png'));
+
 
           request.files.add(multipartFile);
           var response = await request.send();
           print(response.statusCode);
           response.stream.transform(utf8.decoder).listen((value) {
             print(value);
-          });
-          /* http.MultipartRequest request =
-              new http.MultipartRequest("POST", postUri);
-          request.fields['user'] = 'blah';
-          request.headers["Content-Type"] = "multipart/form-data";
-          http.MultipartFile multipartFile =
-              await http.MultipartFile.fromPath('file', file.path);
-          print('multipartfile');
-          print(file.existsSync());
-          print(multipartFile.contentType);
-          print(multipartFile.field);
-          print(multipartFile.filename);
-          print(multipartFile.length);
-          request.files.add(multipartFile);
-          http.StreamedResponse response = await request.send();
-          print(response.statusCode);
-          //var data = json.decode(response.body) as String;
-          /* setState(() {
-            text = text;
           }); */
-          print('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: ');
-          print(text); */
-          //Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
-        }
-        /*  else {
+        } else {
           print(_faces.length);
-        } */
+        }
       }
     } catch (e) {
       print(e);
