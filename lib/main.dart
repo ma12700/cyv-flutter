@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       create: (_) => Auth(),
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Cast Your Vote',
           theme: ThemeData(
               fontFamily: 'SourceSansPro', primaryColor: Style.primaryColor),

@@ -26,7 +26,7 @@ class TextLoginWidget extends StatelessWidget {
           padding: EdgeInsets.all(15),
           child: Text(
             authMode == AuthMode.Login
-                ? (lang == 'En' ? "Login As a guest" : dictionary['LAG'])
+                ? "" //(lang == 'En' ? "Login As a guest" : dictionary['LAG'])
                 : (lang == 'En' ? "Login Instead" : dictionary['LI']),
             style: TextStyle(
               fontSize: 20,

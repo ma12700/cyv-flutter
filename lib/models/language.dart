@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-var lang = "ع";
-var direction = TextDirection.rtl;
+var lang = "En";
+var direction = TextDirection.ltr;
 final dictionary = {
   "Voter": "(ناخب)",
   "Candidate": "(مترشح)",
@@ -21,7 +21,7 @@ final dictionary = {
   "TLP": "عدد أحرف كلمة المرور يجب الا تقل عن 8",
   "FTP": "هل نسيت كلمة المرور؟",
   "Login": "تسجيل الدخول",
-  "Next": "التالى",
+  "Send": "أرسال",
   "Back": "السابق",
   "LI": "تسجيل الدخول؟",
   "EYC": "أدخل الكود المرسل",

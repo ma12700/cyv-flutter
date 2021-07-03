@@ -19,10 +19,8 @@ class AuthButtonWidget extends StatelessWidget {
             backgroundColor: Style.buttonColor(Style.primaryColor),
             shape: Style.buttonShape,
           ),
-          onPressed: () {
-            authMode == AuthMode.Reset
-                ? changeMode(AuthMode.Confirm)
-                : submit();
+          onPressed: () async {
+            await submit();
           },
           child: Container(
             padding: EdgeInsets.all(15),
@@ -32,7 +30,7 @@ class AuthButtonWidget extends StatelessWidget {
               authMode == AuthMode.Login
                   ? (lang == 'En' ? "Login" : dictionary['Login'])
                   : authMode == AuthMode.Reset
-                      ? (lang == 'En' ? "Next" : dictionary['Next'])
+                      ? (lang == 'En' ? "Send" : dictionary['Send'])
                       : (lang == 'En' ? "Verify" : dictionary['Verify']),
               style: TextStyle(
                 fontSize: 20,

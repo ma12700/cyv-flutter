@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import '../widgets/login/face_detect_widget.dart';
 import 'package:cyv/models/language.dart';
 
@@ -8,16 +9,15 @@ class FaceRecognitionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.only(
-              top: 100,
-            ),
+            height: size.height,
             child: Center(
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     lang == 'En' ? "Login by your face" : dictionary['LBYF'],

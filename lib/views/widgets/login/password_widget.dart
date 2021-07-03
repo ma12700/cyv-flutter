@@ -50,7 +50,7 @@ class _PasswordWidgetState extends State<PasswordWidget> {
                   })),
       textInputAction: TextInputAction.done,
       validator: (value) {
-        if (value.length <= 8) {
+        if (value.length <= 4) {
           return (lang == 'En'
               ? "The length of password must be 8"
               : dictionary['TLP']);

@@ -11,6 +11,7 @@ class MyProfileWidget extends StatefulWidget {
 }
 
 class _MyProfileWidgetState extends State<MyProfileWidget> {
+  int index = 0;
   void updateData(String title) {
     print('object hereeeeeeeeeeeee');
   }
@@ -64,8 +65,8 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                           width: 150,
                           height: 150,
                           decoration: BoxDecoration(
-                              image:
-                                  DecorationImage(image: AssetImage(User.img)),
+                              image: DecorationImage(
+                                  image: NetworkImage(User.img)),
                               border:
                                   Border.all(width: 1, color: Style.darkColor),
                               color: Style.lightColor),
@@ -97,6 +98,14 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                   updateData),
               TaskRow((lang == 'En' ? 'Reset Password' : dictionary['RP']),
                   '************', Style.secondColor, updateData),
+              ...User.otherAttributes.entries.map((e) {
+                index = (index + 1) % 2;
+                return TaskRow(
+                    e.key,
+                    e.value,
+                    index == 0 ? Style.secondColor : Style.primaryColor,
+                    updateData);
+              }).toList(),
               if (User.type == "Candidate")
                 TaskRow(
                     (lang == 'En' ? 'Add Program' : dictionary['AP']),

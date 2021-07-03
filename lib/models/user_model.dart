@@ -10,6 +10,7 @@ class User {
   static String img;
   static String nid;
   static String email;
+  static bool state;
   static String password;
   static bool isCandidature;
   static String etherumAddress;
@@ -18,9 +19,9 @@ class User {
   static String facebookURL = "";
   static String twitterURL = "";
   static final String baseUrl = 'https://e-votingfci.herokuapp.com/';
-  static Map<String, dynamic> otherAttributes;
+  static Map<String, dynamic> otherAttributes = {};
 
-  static Future<int> login(File file) async {
+  static Future<void> login(File file, Function onComplete) async {
     var url = Uri.parse(baseUrl + 'auth/login');
     var stream = new http.ByteStream(file.openRead());
     stream.cast();
@@ -32,42 +33,39 @@ class User {
         contentType: new MediaType('image', file.path.split('.').last));
 
     request.files.add(multipartFile);
-    request.fields
-        .addAll({"email": "mohammed@gmail.com", "password": "123456"});
-    var response = await request.send();
-    print(response.statusCode);
-    response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
+    request.fields.addAll({"email": email, "password": password});
+    String resultString = "";
+    await request.send().then((result) async {
+      http.Response.fromStream(result).then((response) {
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          print('here 1: ' + data.toString());
+          token = response.headers['x-auth-token'];
+          type = data["user"]['type'];
+          isCandidature = data["user"]['isCandidature'];
+          state = data["user"]['state'];
+          id = data["user"]['_id'];
+          img = data["user"]['image'];
+          name = data["user"]['name'];
+          nid = data["user"]['nationalID'];
+          etherumAddress = data["user"]['etherumAddress'];
+          print('here' + data["user"]['statistics'].toString());
+          (data["user"]['statistics'] as List<dynamic>).forEach((attribute) {
+            var attr = attribute as Map<String, dynamic>;
+            otherAttributes[attr['key']] = attr['value'];
+          });
+          resultString = "matched";
+        } else if (response.statusCode == 404) {
+          resultString = "Wrong Email or Password";
+        } else {
+          final Map<String, dynamic> data = json.decode(response.body);
+          resultString = data['result'];
+        }
+        onComplete(resultString);
+      });
+    }).catchError((err) {
+      onComplete(err.toString());
     });
-    return response.statusCode;
-    /* var response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        "email": "mohammed@gmail.com",
-        "password": "123456"
-      }),
-    );
-    token = response.headers['x-auth-token'];
-    if (token == null) {
-      throw Exception();
-    }
-    url = Uri.parse(baseUrl + 'user/getMe');
-    response = await http.get(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-auth-token': token
-    });
-    var data = json.decode(response.body) as Map<String, dynamic>;
-    img = data['image'];
-    name = data['name'];
-    type = data['type'];
-    nid = data['nationalID'];
-    id = data['_id'];
-    isCandidature = data['isCandidature'];
-    etherumAddress = data['etherumAddress'];
-    otherAttributes = data['statistics'][0]; */
   }
 
   static Future<int> resetPassword() async {

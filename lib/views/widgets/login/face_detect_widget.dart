@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cyv/controllers/dialog.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/home_screen.dart';
@@ -7,9 +8,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:google_ml_vision/google_ml_vision.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:http_parser/http_parser.dart';
 
 class FaceSetectWidget extends StatefulWidget {
   @override
@@ -24,6 +22,7 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
   CameraLensDirection _direction = CameraLensDirection.front;
   String text = "message";
   File file = null;
+  bool isSend = false;
   @override
   void initState() {
     super.initState();
@@ -31,7 +30,7 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
 
   Future<CameraDescription> _getCamera(CameraLensDirection dir) async {
     return await availableCameras().then(
-      (List<CameraDescription> cameras) => cameras.firstWhere(
+      (List<CameraDescription> cameras) => cameras.lastWhere(
         (CameraDescription camera) => camera.lensDirection == dir,
       ),
     );
@@ -47,41 +46,36 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
     print('init camera');
   }
 
+  void onComplete(result) {
+    if (result == "matched") {
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+    } else {
+      setState(() {
+        print('here ' + result);
+        isSend = false;
+      });
+      showErrorDialog(result, context);
+    }
+  }
+
   Future<void> faceDetect() async {
     try {
       if (!_camera.value.isTakingPicture) {
         final image = await _camera.takePicture();
-        visionImage = GoogleVisionImage.fromFilePath(image?.path);
+        /* visionImage = GoogleVisionImage.fromFilePath(image?.path);
         _faces = await faceDetector.processImage(visionImage);
         print('heree:ADVad');
         print('heree' + _faces.length.toString());
-        if (_faces.length == 1) {
-          file = File(image.path);
-          int result = await User.login(file);
-          if (result == 200) {
-            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-          }
-          /* var postUri = Uri.parse("https://cyv-app.herokuapp.com/run");
-          var stream = new http.ByteStream(file.openRead());
-          stream.cast();
-          var length = await file.length();
-
-          var request = new http.MultipartRequest("POST", postUri);
-          var multipartFile = new http.MultipartFile('file', stream, length,
-              filename: file.path.split('/').last,
-              contentType: new MediaType('image', file.path.split('.').last));
-
-
-          request.files.add(multipartFile);
-          var response = await request.send();
-          print(response.statusCode);
-          response.stream.transform(utf8.decoder).listen((value) {
-            print(value);
-          }); */
-        } else {
-          print(_faces.length);
-        }
+        if (_faces.length == 1) { */
+        file = File(image.path);
+        setState(() {
+          isSend = true;
+        });
+        await User.login(file, onComplete);
+      } else {
+        print(_faces.length);
       }
+      //}
     } catch (e) {
       print(e);
     }
@@ -96,27 +90,35 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    print(isSend);
     return Column(
       children: [
         Container(
-          height: 200,
-          width: 200,
-          child: FutureBuilder<void>(
-            future: _initializeCamera(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return CameraPreview(_camera);
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
+          height: size.height / 2.5,
+          width: size.width - 50,
+          child: !isSend
+              ? FutureBuilder<void>(
+                  future: _initializeCamera(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return CameraPreview(_camera);
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                )
+              : Image.file(file),
         ),
-        ButtonWidget(
-          text: (lang == 'En' ? "Capture" : dictionary['Capture']),
-          navigate: faceDetect,
+        SizedBox(
+          height: 20,
         ),
-        Text(text),
+        !isSend
+            ? ButtonWidget(
+                text: (lang == 'En' ? "Capture" : dictionary['Capture']),
+                navigate: faceDetect,
+              )
+            : CircularProgressIndicator(),
         //file != null ? Image.file(file) : Text('null')
       ],
     );

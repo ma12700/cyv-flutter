@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cyv/controllers/dialog.dart';
-import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/face_login_screen.dart';
 import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/login/auth_button_widget.dart';
@@ -30,39 +29,38 @@ class _AuthFormStrState extends State<AuthForm> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Future<void> _submit() async {
-      if (!_formKey.currentState.validate()) {
-        return;
+  Future<void> _submit() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+    _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      if (_authMode == AuthMode.Login) {
+        //await User.login();
+        Navigator.of(context).pushNamed(FaceRecognitionScreen.routeName);
+      } else {
+        // Sign user up
       }
-      _formKey.currentState.save();
-      setState(() {
-        _isLoading = true;
-      });
-      try {
-        if (_authMode == AuthMode.Login) {
-          //await User.login();
-          Navigator.of(context)
-              .pushReplacementNamed(FaceRecognitionScreen.routeName);
-        } else {
-          // Sign user up
-        }
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen()));
-      } on SocketException {
-        showErrorDialog('No Internet connection', context);
-      } on TimeoutException catch (_) {
-        showErrorDialog('Connection timeout', context);
-      } catch (e) {
-        showErrorDialog('$e', context);
-      }
-
-      setState(() {
-        _isLoading = false;
-      });
+      /* Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen())); */
+    } on SocketException {
+      showErrorDialog('No Internet connection', context);
+    } on TimeoutException catch (_) {
+      showErrorDialog('Connection timeout', context);
+    } catch (e) {
+      showErrorDialog('$e', context);
     }
 
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Form(
         key: _formKey,
         child: Padding(
