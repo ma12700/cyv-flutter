@@ -67,7 +67,7 @@ class CandidatesModel {
       tracks[trackID].candidates = [];
       data.forEach((candidate) {
         tracks[trackID].candidates.add(Candidate(
-            candidate['id'],
+            candidate['_id'],
             candidate['name'],
             candidate['image'],
             0,
@@ -80,5 +80,40 @@ class CandidatesModel {
       print(e.toString());
     }
     return true;
+  }
+
+  static Future<bool> waive() async {
+    bool flag = false;
+    try {
+      var url = Uri.parse(User.url + 'candidate/waive');
+      await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': User.token
+      });
+    } catch (e) {
+      print('error: ');
+      print(e.toString());
+    }
+    return flag;
+  }
+
+  static Future<bool> vote() async {
+    bool flag = false;
+    try {
+      var url = Uri.parse(User.url + 'candidate/vote');
+      await http.post(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': User.token
+      }, body: {
+        "result": tracks.entries
+            .map((track) =>
+                {"track": track.key, "candidateID": track.value.votes})
+            .toList()
+      });
+    } catch (e) {
+      print('error: ');
+      print(e.toString());
+    }
+    return flag;
   }
 }

@@ -50,31 +50,41 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(
-          appBar: appBarWidget(setLanguage,
-              title: CandidatesModel.tracks[trackID].name),
-          body: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView(
-                children: [
-                  // search widget
-                  Container(
-                      margin: EdgeInsets.all(10),
-                      child: SearchWidget(search: search)),
-                  //     // list of candidates
-                  Column(
-                    children: CandidatesModel.tracks[trackID].candidates
-                        .map((e) => Container(
-                              child: e.isVisible
-                                  ? CandidateCardWidget(
-                                      trackID,
-                                      CandidatesModel.tracks[trackID].candidates
-                                          .indexOf(e))
-                                  : Container(),
-                            ))
-                        .toList(),
-                  ),
-                ],
-              )),
-        ));
+            appBar: appBarWidget(setLanguage,
+                title: CandidatesModel.tracks[trackID].name),
+            body: FutureBuilder(
+              future: CandidatesModel.fetchCandidates(trackID),
+              builder: (ctx, fetchResultSnapshot) =>
+                  fetchResultSnapshot.connectionState == ConnectionState.waiting
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ListView(
+                            children: [
+                              // search widget
+                              Container(
+                                  margin: EdgeInsets.all(10),
+                                  child: SearchWidget(search: search)),
+                              //     // list of candidates
+                              Column(
+                                children:
+                                    CandidatesModel.tracks[trackID].candidates
+                                        .map((e) => Container(
+                                              child: e.isVisible
+                                                  ? CandidateCardWidget(
+                                                      trackID,
+                                                      CandidatesModel
+                                                          .tracks[trackID]
+                                                          .candidates
+                                                          .indexOf(e))
+                                                  : Container(),
+                                            ))
+                                        .toList(),
+                              ),
+                            ],
+                          )),
+            )));
   }
 }

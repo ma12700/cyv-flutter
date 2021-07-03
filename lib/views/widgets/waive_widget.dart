@@ -1,3 +1,4 @@
+import 'package:cyv/models/candidates_model.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,9 @@ class WaiveWidget extends StatelessWidget {
                   backgroundColor: Style.buttonColor(Style.primaryColor),
                   shape: Style.buttonShape,
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  bool result = await CandidatesModel.waive();
+                },
                 child: Text(
                   (lang == 'En' ? 'Yes, I Confirm' : dictionary['YIC']),
                   style: TextStyle(fontSize: 20),

@@ -12,6 +12,9 @@ class User {
   static bool isCandidature;
   static String etherumAddress;
   static String token;
+  static String program = "";
+  static String facebookURL = "";
+  static String twitterURL = "";
   static final String url = 'https://e-votingfci.herokuapp.com/';
   static Map<String, dynamic> otherAttributes;
   static login() async {
@@ -44,5 +47,23 @@ class User {
     isCandidature = data['isCandidature'];
     etherumAddress = data['etherumAddress'];
     otherAttributes = data['statistics'][0];
+  }
+
+  static Future<bool> fetchProgram() async {
+    try {
+      var url = Uri.parse(User.url + 'candidate/me');
+      final response = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': User.token
+      });
+      var data = json.decode(response.body);
+      program = data['program'];
+      facebookURL = data['facebookURL'];
+      twitterURL = data['twitterURL'];
+    } catch (e) {
+      print('error: ');
+      print(e.toString());
+    }
+    return true;
   }
 }

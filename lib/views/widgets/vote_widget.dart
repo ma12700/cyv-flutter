@@ -71,22 +71,25 @@ class _VoteWidgetState extends State<VoteWidget> {
                     )
                   : Container(),
               ButtonWidget(
-                  text: _trackIndex == n - 1
-                      ? (lang == 'En' ? 'Cast Vote' : dictionary['CV'])
-                      : (lang == 'En' ? 'Next' : dictionary['Next']),
-                  navigate:
-                      CandidatesModel.tracks[keys[_trackIndex]].votes.length ==
-                              CandidatesModel
-                                  .tracks[keys[_trackIndex]].numberOfWinners
-                          ? () {
-                              if (_trackIndex != n - 1) {
-                                setState(() {
-                                  changeTrack(true);
-                                  scrollController.jumpTo(0);
-                                });
-                              }
+                text: _trackIndex == n - 1
+                    ? (lang == 'En' ? 'Cast Vote' : dictionary['CV'])
+                    : (lang == 'En' ? 'Next' : dictionary['Next']),
+                navigate:
+                    CandidatesModel.tracks[keys[_trackIndex]].votes.length ==
+                            CandidatesModel
+                                .tracks[keys[_trackIndex]].numberOfWinners
+                        ? () {
+                            if (_trackIndex != n - 1) {
+                              setState(() {
+                                changeTrack(true);
+                                scrollController.jumpTo(0);
+                              });
                             }
-                          : null)
+                          }
+                        : () async {
+                            bool result = await CandidatesModel.vote();
+                          },
+              )
             ],
           ),
         ),

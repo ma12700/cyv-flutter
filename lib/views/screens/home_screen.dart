@@ -1,6 +1,7 @@
 import 'package:cyv/models/candidates_model.dart';
 import 'package:cyv/models/infoPages_model.dart';
 import 'package:cyv/models/language.dart';
+import 'package:cyv/models/requirements_model.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/widgets/app_bar_widget.dart';
 import 'package:cyv/views/widgets/tracks_widget.dart';
@@ -70,15 +71,17 @@ class HomeScreenState extends State<HomeScreen> {
                   isCandidature: true,
                 ));
       case 'CnadidatureForm':
-        return FormData();
+        return RequirementsModel.requirements.isNotEmpty
+            ? FormData() //must be updated (is remining)
+            : future(RequirementsModel.fetchRequirements, FormData());
       case 'Waiving':
         return WaiveWidget();
       case 'Voting':
         return VoteWidget();
       case 'Result':
-        return TracksWidget(); //CandidatesWidget(resultFlag: true);
+        return TracksWidget(); //From Smart Contract
       case 'statistics':
-        return Subscribechart(ChartData.data);
+        return Subscribechart(ChartData.data); //Waited for updating
       case 'My profile':
         return MyProfileWidget();
       case 'Help':
