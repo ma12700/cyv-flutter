@@ -3,6 +3,15 @@ import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+class Attribute {
+  final String key;
+  final bool update;
+  final List<String> values;
+  String answer = "";
+
+  Attribute(this.key, this.update, this.values, this.answer);
+}
+
 class User {
   static String id;
   static String type;
@@ -21,6 +30,7 @@ class User {
   static final String baseUrl = 'https://e-votingfci.herokuapp.com/';
   static String time = "Result";
   static Map<String, dynamic> otherAttributes = {};
+  static List<Attribute> attributesValues = [];
 
   static Future<void> login(File file, Function onComplete) async {
     var url = Uri.parse(baseUrl + 'auth/login');
@@ -49,7 +59,6 @@ class User {
           name = data["user"]['name'];
           nid = data["user"]['nationalID'];
           etherumAddress = data["user"]['etherumAddress'];
-          print('here' + data["user"]['statistics'].toString());
           (data["user"]['statistics'] as List<dynamic>).forEach((attribute) {
             var attr = attribute as Map<String, dynamic>;
             otherAttributes[attr['key']] = attr['value'];
@@ -66,6 +75,38 @@ class User {
     }).catchError((err) {
       onComplete(err.toString());
     });
+  }
+
+  static Future<bool> getMe() async {
+    var url = Uri.parse(baseUrl + 'user/getMe');
+    final response = await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-auth-token': User.token
+    });
+    final Map<String, dynamic> data = json.decode(response.body);
+    type = data['type'];
+    isCandidature = data['isCandidature'];
+    state = data['state'];
+    id = data['_id'];
+    img = data['image'];
+    name = data['name'];
+    nid = data['nationalID'];
+    etherumAddress = data['etherumAddress'];
+    attributesValues = [];
+    (data['statistics'] as List<dynamic>).forEach((attribute) {
+      var attr = attribute as Map<String, dynamic>;
+      var values =
+          (attr['values'] as List<dynamic>).map((e) => e.toString()).toList();
+      otherAttributes[attr['key']] = attr['value'];
+
+      try {
+        attributesValues
+            .add(Attribute(attr['key'], attr['update'], values, attr['value']));
+      } catch (e) {
+        print('here : ' + e);
+      }
+    });
+    return true;
   }
 
   static Future<int> resetPassword() async {

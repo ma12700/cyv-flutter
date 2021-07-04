@@ -64,8 +64,11 @@ class HomeScreenState extends State<HomeScreen> {
             : future(CandidatesModel.fetchTracks, TracksWidget());
       case 'Cnadidature':
         return CandidatesModel.tracks.isNotEmpty
-            ? TracksWidget()
-            : future(CandidatesModel.fetchTracks, TracksWidget());
+            ? TracksWidget(
+                isCandidature: true,
+              )
+            : future(
+                CandidatesModel.fetchTracks, TracksWidget(isCandidature: true));
       case 'CnadidatureForm':
         return RequirementsModel.requirements.isNotEmpty
             ? CandidatureForm() //must be updated (is remining)
@@ -82,7 +85,9 @@ class HomeScreenState extends State<HomeScreen> {
       case 'statistics':
         return Subscribechart(barIndex); //Waited for updating
       case 'My profile':
-        return MyProfileWidget(barIndex);
+        return User.attributesValues.isEmpty
+            ? future(User.getMe, MyProfileWidget(barIndex))
+            : MyProfileWidget(barIndex);
       case 'Help':
         return HelpWidget();
       default:
@@ -118,12 +123,12 @@ class HomeScreenState extends State<HomeScreen> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.person_pin_outlined), label: 'profile'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.mode_edit_outlined), label: 'Update Profile')
+                icon: Icon(Icons.mode_edit_outlined), label: 'Update Profile'),
+            if (User.type == "Candidate")
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.edit_attributes_outlined),
+                  label: 'Edit Program')
           ]);
-      if (User.type == "Candidate") {
-        bottom.items.add(BottomNavigationBarItem(
-            icon: Icon(Icons.edit_attributes_outlined), label: 'Edit Program'));
-      }
 
       return bottom;
     } else {

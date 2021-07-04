@@ -1,6 +1,7 @@
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user_model.dart';
+import 'package:cyv/views/widgets/profiles/updateProfile.dart';
 import 'package:flutter/material.dart';
 import 'profiles/taskrow.dart';
 import 'write_Program_screen.dart';
@@ -97,7 +98,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                       return TaskRow(
                         e.key,
                         e.value,
-                        index == 0 ? Style.secondColor : Style.primaryColor,
+                        index == 1 ? Style.secondColor : Style.primaryColor,
                       );
                     }).toList(),
                   ],
@@ -106,7 +107,7 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
             ),
           )
         : widget.index == 1
-            ? Center(child: Text('Update Profile Widget Must Created'))
+            ? UpdateProfileWidget()
             : WriteProgramScreen();
   }
 }
