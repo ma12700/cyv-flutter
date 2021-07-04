@@ -10,9 +10,6 @@ import './views/screens/splash_screen.dart';
 import './providers/auth.dart';
 import 'views/screens/face_login_screen.dart';
 import './views/screens/login_screen.dart';
-// import './screen/candidatepr.dart';
-import 'views/widgets/write_Program_screen.dart';
-// import './widget/fform.dart';
 
 void main() => runApp(MyApp());
 

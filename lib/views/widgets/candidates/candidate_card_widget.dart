@@ -2,7 +2,6 @@ import 'package:cyv/models/candidates_model.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/screens/candidate_profile_screen.dart';
-import 'package:cyv/views/widgets/candidates/resultInfo_widget.dart';
 import 'package:flutter/material.dart';
 
 class CandidateCardWidget extends StatelessWidget {
@@ -17,12 +16,7 @@ class CandidateCardWidget extends StatelessWidget {
         CandidatesModel.tracks[trackID].candidates[candidateIndex];
     final bool flag = CandidatesModel.tracks[trackID].votes.length <
         CandidatesModel.tracks[trackID].numberOfWinners;
-    final Color cardColor = (candidate.isSelected)
-        ? Style.primaryColor
-        : flag
-            ? Style.primaryColor
-            : Style.nullColor;
-    ;
+
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(CandidateProfileScreen.routeName,

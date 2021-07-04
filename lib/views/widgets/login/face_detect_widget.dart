@@ -21,7 +21,7 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
   CameraController _camera;
   CameraLensDirection _direction = CameraLensDirection.front;
   String text = "message";
-  File file = null;
+  File file;
   bool isSend = false;
   @override
   void initState() {

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class TopPartWidget extends StatelessWidget {
   final dys = [50.0, 30.0];
-  int i = 0;
   @override
   Widget build(BuildContext context) {
+    int i = 0;
     return Stack(children: [
       ...dys.map((dy) {
         i++;

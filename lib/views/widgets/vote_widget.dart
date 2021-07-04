@@ -3,7 +3,6 @@ import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
 import 'package:cyv/views/widgets/candidates/candidate_card_widget.dart';
-import 'package:cyv/views/widgets/candidates/voteCandidate_card.dart';
 import 'package:cyv/views/widgets/candidates/title_card.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +18,7 @@ class _VoteWidgetState extends State<VoteWidget> {
   @override
   Widget build(BuildContext context) {
     keys = CandidatesModel.tracks.keys.toList();
-    final size = MediaQuery.of(context).size;
+    //final size = MediaQuery.of(context).size;
     return Column(
       children: [
         TitleCard(CandidatesModel.tracks[keys[_trackIndex]].name),
@@ -89,7 +88,7 @@ class _VoteWidgetState extends State<VoteWidget> {
                                 scrollController.jumpTo(0);
                               });
                             } else {
-                              bool result = await CandidatesModel.vote();
+                              //bool result = await CandidatesModel.vote();
                             }
                           }
                         : null,

@@ -2,14 +2,13 @@ import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:cyv/models/candidates_model.dart';
 
 class ProgramWidget extends StatelessWidget {
   final String program;
   ProgramWidget(this.program);
   @override
   Widget build(BuildContext context) {
-    int _trackIndex = 0;
+    //int _trackIndex = 0;
     // int n = CandidatesModel.tracks.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -63,6 +63,7 @@ class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
             ? Container(
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: TextFormField(
+                    obscureText: !show,
                     decoration: InputDecoration(
                         labelText: 'Reset Password',
                         fillColor: Style.lightColor,

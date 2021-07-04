@@ -189,6 +189,7 @@ class _CandidatureFormState extends State<CandidatureForm> {
         return TextInputType.datetime;
         break;
       default:
+        return TextInputType.text;
     }
   }
 }

@@ -15,7 +15,6 @@ import 'package:cyv/views/widgets/waive_widget.dart';
 import 'package:flutter/material.dart';
 import '../widgets/my_profile_widget.dart';
 import '../widgets/statistics.dart';
-import '../../models/series_data.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';

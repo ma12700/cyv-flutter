@@ -2,7 +2,6 @@ import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cyv/views/widgets/app_bar_widget.dart';
 
 class WriteProgramScreen extends StatefulWidget {
   final urlLink = {
@@ -23,7 +22,7 @@ class _WriteProgramScreenState extends State<WriteProgramScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final titleName = ModalRoute.of(context).settings.arguments;
+    //final titleName = ModalRoute.of(context).settings.arguments;
     return FutureBuilder(
       future: User.fetchProgram(),
       builder: (ctx, fetchResultSnapshot) =>
