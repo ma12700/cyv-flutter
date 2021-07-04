@@ -3,8 +3,7 @@ import 'package:cyv/views/screens/candidates_screen.dart';
 import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/screens/page_content_screen.dart';
 import 'package:cyv/views/screens/candidate_profile_screen.dart';
-import 'package:cyv/views/widgets/candidatureForm.dart';
-import 'package:cyv/views/widgets/fform.dart';
+import 'package:cyv/views/widgets/candidature.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './views/screens/splash_screen.dart';
@@ -12,7 +11,7 @@ import './providers/auth.dart';
 import 'views/screens/face_login_screen.dart';
 import './views/screens/login_screen.dart';
 // import './screen/candidatepr.dart';
-import 'views/screens/write_Program_screen.dart';
+import 'views/widgets/write_Program_screen.dart';
 // import './widget/fform.dart';
 
 void main() => runApp(MyApp());
@@ -43,12 +42,10 @@ class MyApp extends StatelessWidget {
             LoginScreen.routeName: (ctx) => LoginScreen(),
             FaceRecognitionScreen.routeName: (ctx) => FaceRecognitionScreen(),
             HomeScreen.routeName: (ctx) => HomeScreen(),
-            WriteProgramScreen.routeName: (ctx) => WriteProgramScreen(),
             PageContentScreen.routeName: (ctx) => PageContentScreen(),
             CandidatesScreen.routeName: (ctx) => CandidatesScreen(),
             CandidateProfileScreen.routeName: (ctx) => CandidateProfileScreen(),
-            Forms.routeName: (ctx) => Forms(),
-            FormData.routeName: (ctx) => FormData()
+            CandidatureForm.routeName: (ctx) => CandidatureForm(),
           },
         ),
       ),

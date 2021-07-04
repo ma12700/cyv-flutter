@@ -5,30 +5,30 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:cyv/models/style.dart';
 
 class Subscribechart extends StatelessWidget {
-  final List<SubscriberSeries> data;
-
-  Subscribechart(this.data);
+  final int index;
+  Subscribechart(this.index);
   @override
   Widget build(BuildContext context) {
-    final staticLabel = <TickSpec<int>>[
+    ChartData.fetchStatistics();
+    final ydomainLabel = <TickSpec<int>>[
+      TickSpec(0),
+      TickSpec(20),
+      TickSpec(40),
+      TickSpec(60),
+      TickSpec(80),
       TickSpec(100),
-      TickSpec(150),
-      TickSpec(200),
-      TickSpec(250),
-      TickSpec(300),
-      TickSpec(350),
-      TickSpec(400),
-      TickSpec(450),
-      TickSpec(500),
+      TickSpec(120),
+      TickSpec(140),
+      TickSpec(160),
     ];
     final size = MediaQuery.of(context).size.height;
     List<charts.Series<SubscriberSeries, String>> series = [
       charts.Series(
           id: "subscribers",
-          data: data,
-          domainFn: (SubscriberSeries series, _) => series.year.toString(),
-          measureFn: (SubscriberSeries series, _) => series.subscribtion,
-          colorFn: (SubscriberSeries series, _) => series.barchar)
+          data: ChartData.data,
+          domainFn: (SubscriberSeries series, _) => series.title,
+          measureFn: (SubscriberSeries series, _) => series.value,
+          colorFn: (SubscriberSeries series, _) => series.color),
     ];
     var container = Container(
       height: 20,
@@ -57,29 +57,19 @@ class Subscribechart extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(
-            height: size * 0.09,
-          ),
           Container(
-              // width: size * 0.8,
-              padding: EdgeInsets.all(10),
-              child:
-                  // SizedBox(height: size * 0.2),
-                  Container(
-                height: size * 0.6,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              child: Container(
+                height: size * 0.65,
                 child: charts.BarChart(
                   series,
                   domainAxis: new charts.OrdinalAxisSpec(
                       renderSpec: new charts.SmallTickRendererSpec(
-                          labelRotation: 30,
-
-                          // Tick and Label styling here.
+                          labelRotation: 40,
                           labelStyle: new charts.TextStyleSpec(
-                              lineHeight: 2.0,
+                              lineHeight: 2.5,
                               fontSize: 15, // size in Pts.
                               color: charts.MaterialPalette.black),
-
-                          // Change the line colors to match text color.
                           lineStyle: new charts.LineStyleSpec(
                               thickness: 5,
                               color: charts.MaterialPalette.white))),
@@ -87,7 +77,7 @@ class Subscribechart extends StatelessWidget {
                   /// Assign a custom style for the measure axis.
                   primaryMeasureAxis: new charts.NumericAxisSpec(
                       tickProviderSpec:
-                          StaticNumericTickProviderSpec(staticLabel),
+                          StaticNumericTickProviderSpec(ydomainLabel),
                       showAxisLine: true,
                       renderSpec: new charts.GridlineRendererSpec(
 
@@ -99,13 +89,13 @@ class Subscribechart extends StatelessWidget {
 
                           // Change the line colors to match text color.
                           lineStyle: new charts.LineStyleSpec(
-                              thickness: 3,
+                              thickness: 5,
                               color: charts.MaterialPalette.white))),
 
-                  animate: true,
+                  //animate: true,
                   defaultRenderer: BarRendererConfig(
                     fillPattern: FillPatternType.solid,
-                    cornerStrategy: const ConstCornerStrategy(8),
+                    cornerStrategy: const ConstCornerStrategy(10),
                   ),
                 ),
               )),

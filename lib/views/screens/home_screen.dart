@@ -3,7 +3,9 @@ import 'package:cyv/models/infoPages_model.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/requirements_model.dart';
 import 'package:cyv/models/style.dart';
+import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/widgets/app_bar_widget.dart';
+import 'package:cyv/views/widgets/candidature.dart';
 import 'package:cyv/views/widgets/tracks_widget.dart';
 import '../widgets/help_widget.dart';
 import '../widgets/vote_widget.dart';
@@ -12,7 +14,6 @@ import 'package:cyv/views/widgets/info_pages_widget.dart';
 import 'package:cyv/views/widgets/waive_widget.dart';
 import 'package:flutter/material.dart';
 import '../widgets/my_profile_widget.dart';
-import 'package:cyv/views/widgets/candidatureForm.dart';
 import '../widgets/statistics.dart';
 import '../../models/series_data.dart';
 
@@ -23,10 +24,12 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   String bodywidget = 'Home';
+  int barIndex = 0;
   void changeBody(String value) {
     if (bodywidget != value) {
       setState(() {
         bodywidget = value;
+        barIndex = 0;
       });
     }
   }
@@ -61,28 +64,25 @@ class HomeScreenState extends State<HomeScreen> {
             : future(CandidatesModel.fetchTracks, TracksWidget());
       case 'Cnadidature':
         return CandidatesModel.tracks.isNotEmpty
-            ? TracksWidget(
-                isCandidature: true,
-              )
-            : future(
-                CandidatesModel.fetchTracks,
-                TracksWidget(
-                  isCandidature: true,
-                ));
+            ? TracksWidget()
+            : future(CandidatesModel.fetchTracks, TracksWidget());
       case 'CnadidatureForm':
         return RequirementsModel.requirements.isNotEmpty
-            ? FormData() //must be updated (is remining)
-            : future(RequirementsModel.fetchRequirements, FormData());
+            ? CandidatureForm() //must be updated (is remining)
+            : future(RequirementsModel.fetchRequirements, CandidatureForm());
       case 'Waiving':
         return WaiveWidget();
       case 'Voting':
-        return VoteWidget();
+        return future(CandidatesModel.fetchAll, VoteWidget());
       case 'Result':
-        return TracksWidget(); //From Smart Contract
+        return CandidatesModel.tracks.isNotEmpty
+            ? TracksWidget()
+            : future(CandidatesModel.fetchTracks,
+                TracksWidget()); //From Smart Contract
       case 'statistics':
-        return Subscribechart(ChartData.data); //Waited for updating
+        return Subscribechart(barIndex); //Waited for updating
       case 'My profile':
-        return MyProfileWidget();
+        return MyProfileWidget(barIndex);
       case 'Help':
         return HelpWidget();
       default:
@@ -90,17 +90,58 @@ class HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  BottomNavigationBar bottomBar() {
+    if (bodywidget == "statistics" && User.time == "Result") {
+      return BottomNavigationBar(
+          selectedItemColor: Style.primaryColor,
+          currentIndex: barIndex,
+          onTap: (index) {
+            setState(() {
+              barIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.people), label: 'All Voters'),
+            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Result')
+          ]);
+    } else if (bodywidget == 'My profile') {
+      var bottom = BottomNavigationBar(
+          selectedItemColor: Style.primaryColor,
+          currentIndex: barIndex,
+          onTap: (index) {
+            setState(() {
+              barIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person_pin_outlined), label: 'profile'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.mode_edit_outlined), label: 'Update Profile')
+          ]);
+      if (User.type == "Candidate") {
+        bottom.items.add(BottomNavigationBarItem(
+            icon: Icon(Icons.edit_attributes_outlined), label: 'Edit Program'));
+      }
+
+      return bottom;
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
-      child: Scaffold(
-        appBar: appBarWidget(setLanguage,
-            title: (lang == "En" ? bodywidget : dictionary[bodywidget])),
-        drawer: AppDrawer(changeBody),
-        backgroundColor: Style.backgroundColor,
-        body: bodyWidget(),
-      ),
-    );
+        textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
+        child: Scaffold(
+          appBar: appBarWidget(setLanguage,
+              title: (lang == "En" ? bodywidget : dictionary[bodywidget])),
+          drawer: AppDrawer(changeBody),
+          backgroundColor: Style.backgroundColor,
+          body: bodyWidget(),
+          bottomNavigationBar: bottomBar(),
+        ));
   }
 }

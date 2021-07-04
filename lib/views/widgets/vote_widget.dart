@@ -2,6 +2,7 @@ import 'package:cyv/models/candidates_model.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
+import 'package:cyv/views/widgets/candidates/candidate_card_widget.dart';
 import 'package:cyv/views/widgets/candidates/voteCandidate_card.dart';
 import 'package:cyv/views/widgets/candidates/title_card.dart';
 import 'package:flutter/material.dart';
@@ -11,24 +12,26 @@ class VoteWidget extends StatefulWidget {
 }
 
 class _VoteWidgetState extends State<VoteWidget> {
+  var keys;
   int _trackIndex = 0;
   int n = CandidatesModel.tracks.length;
-  var keys = CandidatesModel.tracks.keys.toList();
   final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
+    keys = CandidatesModel.tracks.keys.toList();
     final size = MediaQuery.of(context).size;
-    return ListView(
+    return Column(
       children: [
         TitleCard(CandidatesModel.tracks[keys[_trackIndex]].name),
-        Container(
-          height: size.height * 0.4,
+        Expanded(
           child: ListView.builder(
-              scrollDirection: Axis.horizontal,
+              scrollDirection: Axis.vertical,
               controller: scrollController,
-              itemCount: CandidatesModel.tracks[_trackIndex].candidates.length,
+              itemCount:
+                  CandidatesModel.tracks[keys[_trackIndex]].candidates.length,
               itemBuilder: (context, index) {
-                return VoteCandidateCard(keys[_trackIndex], index, vote);
+                return CandidateCardWidget(keys[_trackIndex], index,
+                    vote: vote);
               }),
         ),
         SizedBox(
@@ -38,8 +41,9 @@ class _VoteWidgetState extends State<VoteWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             (lang == 'En' ? 'You must choose (' : dictionary["YMC"]) +
-                CandidatesModel.tracks[_trackIndex].numberOfWinners.toString() +
-                (lang == 'En' ? ") candidate(s) only." : dictionary["CO"]),
+                CandidatesModel.tracks[keys[_trackIndex]].numberOfWinners
+                    .toString() +
+                (lang == 'En' ? ") candidate(s)." : dictionary["CO"]),
             style: TextStyle(
                 color: Style.darkColor,
                 shadows: [
@@ -78,17 +82,17 @@ class _VoteWidgetState extends State<VoteWidget> {
                     CandidatesModel.tracks[keys[_trackIndex]].votes.length ==
                             CandidatesModel
                                 .tracks[keys[_trackIndex]].numberOfWinners
-                        ? () {
+                        ? () async {
                             if (_trackIndex != n - 1) {
                               setState(() {
                                 changeTrack(true);
                                 scrollController.jumpTo(0);
                               });
+                            } else {
+                              bool result = await CandidatesModel.vote();
                             }
                           }
-                        : () async {
-                            bool result = await CandidatesModel.vote();
-                          },
+                        : null,
               )
             ],
           ),

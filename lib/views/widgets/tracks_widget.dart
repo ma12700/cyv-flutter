@@ -2,15 +2,15 @@ import 'dart:math';
 
 import 'package:cyv/models/candidates_model.dart';
 import 'package:cyv/models/style.dart';
+import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/candidates_screen.dart';
-import 'package:cyv/views/widgets/fform.dart';
+import 'package:cyv/views/widgets/candidature.dart';
 import 'package:flutter/material.dart';
 
 class TracksWidget extends StatelessWidget {
   final _random = Random();
-  final bool isCandidature;
 
-  TracksWidget({this.isCandidature = false});
+  TracksWidget();
   @override
   Widget build(BuildContext context) {
     final keys = CandidatesModel.tracks.keys.toList();
@@ -30,8 +30,8 @@ class TracksWidget extends StatelessWidget {
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                        isCandidature
-                            ? Forms.routeName
+                        User.time == "Candidature"
+                            ? CandidatureForm.routeName
                             : CandidatesScreen.routeName,
                         arguments: keys[index]);
                   },

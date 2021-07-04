@@ -47,6 +47,37 @@ class CandidatesModel {
     return true;
   }
 
+  static Future<bool> fetchAll() async {
+    tracks.clear();
+    var url = Uri.parse(User.baseUrl + 'candidate/getCandidate');
+    final response = await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-auth-token': User.token
+    });
+    var data = json.decode(response.body);
+    data.forEach((track) {
+      tracks[track['track']['_id']] = Track(
+          track['track']['title'],
+          track['track']['dividedBy'],
+          (track['track']['NofWinners'] as int), []);
+      tracks[track['track']['_id']].candidates = [];
+
+      (track['candidates'] as List<dynamic>).forEach((cand) {
+        var candidate = cand as Map<String, dynamic>;
+        tracks[track['track']['_id']].candidates.add(Candidate(
+            candidate['_id']['_id'],
+            candidate['_id']['name'],
+            candidate['_id']['image'],
+            0,
+            candidate['facebookURL'],
+            candidate['twitterURL'],
+            candidate['program']));
+      });
+    });
+
+    return true;
+  }
+
   static Future<bool> fetchCandidates(String trackID) async {
     try {
       var url = Uri.parse(User.baseUrl +
@@ -54,7 +85,7 @@ class CandidatesModel {
           trackID +
           '&dividedBy=' +
           User.otherAttributes[tracks[trackID].dividedBy]);
-      print('url : ' + url.toString());
+
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'x-auth-token': User.token
@@ -63,9 +94,6 @@ class CandidatesModel {
       tracks[trackID].candidates = [];
       (data as List<dynamic>).forEach((cand) {
         var candidate = cand as Map<String, dynamic>;
-        var data = candidate['_id'] as Map<String, dynamic>;
-        print(candidate);
-        print(data);
         tracks[trackID].candidates.add(Candidate(
             candidate['_id']['_id'],
             candidate['_id']['name'],
@@ -75,7 +103,6 @@ class CandidatesModel {
             candidate['twitterURL'],
             candidate['program']));
       });
-      print(tracks[trackID].candidates[0].name);
     } catch (e) {
       print('error ' + e);
     }

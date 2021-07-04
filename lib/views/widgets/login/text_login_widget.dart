@@ -1,6 +1,5 @@
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
-import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/login/auth_form.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +17,6 @@ class TextLoginWidget extends StatelessWidget {
         onTap: () {
           if (authMode == AuthMode.Reset || authMode == AuthMode.Confirm) {
             changeMode(AuthMode.Login);
-          } else {
-            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
           }
         },
         child: Container(

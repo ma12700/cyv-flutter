@@ -19,6 +19,7 @@ class User {
   static String facebookURL = "";
   static String twitterURL = "";
   static final String baseUrl = 'https://e-votingfci.herokuapp.com/';
+  static String time = "Result";
   static Map<String, dynamic> otherAttributes = {};
 
   static Future<void> login(File file, Function onComplete) async {
@@ -39,7 +40,6 @@ class User {
       http.Response.fromStream(result).then((response) {
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
-          print('here 1: ' + data.toString());
           token = response.headers['x-auth-token'];
           type = data["user"]['type'];
           isCandidature = data["user"]['isCandidature'];

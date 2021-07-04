@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cyv/controllers/dialog.dart';
+import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/face_login_screen.dart';
-import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/login/auth_button_widget.dart';
 import 'package:cyv/views/widgets/login/confirmWidget.dart';
 import 'package:cyv/views/widgets/login/email_widget.dart';
@@ -39,10 +39,14 @@ class _AuthFormStrState extends State<AuthForm> {
     });
     try {
       if (_authMode == AuthMode.Login) {
-        //await User.login();
         Navigator.of(context).pushNamed(FaceRecognitionScreen.routeName);
       } else {
-        // Sign user up
+        int responseCode = await User.resetPassword();
+        if (responseCode == 200) {
+          showErrorDialog('Check Your Email Inbox', context, title: 'Confirm');
+        } else {
+          showErrorDialog('Wrong Email!', context);
+        }
       }
       /* Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen())); */

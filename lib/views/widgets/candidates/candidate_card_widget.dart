@@ -8,10 +8,21 @@ import 'package:flutter/material.dart';
 class CandidateCardWidget extends StatelessWidget {
   final String trackID;
   final int candidateIndex;
-  CandidateCardWidget(this.trackID, this.candidateIndex);
+  final Function vote;
+  CandidateCardWidget(this.trackID, this.candidateIndex, {this.vote});
   @override
   Widget build(BuildContext context) {
     Size deviseSize = MediaQuery.of(context).size;
+    Candidate candidate =
+        CandidatesModel.tracks[trackID].candidates[candidateIndex];
+    final bool flag = CandidatesModel.tracks[trackID].votes.length <
+        CandidatesModel.tracks[trackID].numberOfWinners;
+    final Color cardColor = (candidate.isSelected)
+        ? Style.primaryColor
+        : flag
+            ? Style.primaryColor
+            : Style.nullColor;
+    ;
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(CandidateProfileScreen.routeName,
@@ -48,8 +59,7 @@ class CandidateCardWidget extends StatelessWidget {
                         Container(
                             margin: EdgeInsets.only(top: 75, bottom: 20),
                             child: Text(
-                              CandidatesModel.tracks[trackID]
-                                  .candidates[candidateIndex].name,
+                              candidate.name,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -57,7 +67,34 @@ class CandidateCardWidget extends StatelessWidget {
                               textAlign: TextAlign.center,
                               softWrap: true,
                             )),
-                        ResultInfoWidget(Style.primaryColor, 70, 120, 1000)
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: candidate.isSelected
+                                    ? Style.buttonColor(Style.secondColor)
+                                    : flag
+                                        ? Style.buttonColor(Style.primaryColor)
+                                        : Style.buttonColor(Style.nullColor)),
+                            onPressed: flag || candidate.isSelected
+                                ? () {
+                                    vote(candidate);
+                                  }
+                                : null,
+                            child: Text(
+                              lang == 'En'
+                                  ? (candidate.isSelected
+                                      ? 'Un-Select'
+                                      : 'Select')
+                                  : (candidate.isSelected
+                                      ? dictionary['Un-Select']
+                                      : dictionary['Select']),
+                              style: TextStyle(
+                                  color: Style.lightColor, fontSize: 15),
+                            ),
+                          ),
+                        )
+                        //ResultInfoWidget(Style.primaryColor, 70, 120, 1000)
                       ],
                     ),
                   )),
@@ -76,8 +113,7 @@ class CandidateCardWidget extends StatelessWidget {
                       border: Border.all(width: 4, color: Style.secondColor),
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: NetworkImage(CandidatesModel
-                              .tracks[trackID].candidates[candidateIndex].img),
+                          image: NetworkImage(candidate.img),
                           fit: BoxFit.fill)),
                 ),
               )

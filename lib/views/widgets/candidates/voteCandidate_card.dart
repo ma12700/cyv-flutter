@@ -41,7 +41,8 @@ class VoteCandidateCard extends StatelessWidget {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: AssetImage(candidate.img), fit: BoxFit.fill)),
+                          image: NetworkImage(candidate.img),
+                          fit: BoxFit.fill)),
                 ),
               ),
               Column(

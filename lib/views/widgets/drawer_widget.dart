@@ -30,16 +30,14 @@ class AppDrawer extends StatelessWidget {
                   children: [
                     // User image
                     Container(
-                        margin: EdgeInsets.only(bottom: 12),
-                        width: 100,
-                        height: 100,
-                    decoration: BoxDecoration(
+                      margin: EdgeInsets.only(bottom: 12),
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                         image: DecorationImage(image: NetworkImage(User.img),
-      fit: BoxFit.fill)
-                         
-                              ),
-                    ), 
+                          image: DecorationImage(
+                              image: NetworkImage(User.img), fit: BoxFit.fill)),
+                    ),
                     //user name
                     Text(
                       User.name,
