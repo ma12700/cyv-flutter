@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateProfileWidget extends StatefulWidget {
   _UpdateProfileWidgetState createState() => _UpdateProfileWidgetState();
@@ -9,11 +12,58 @@ class UpdateProfileWidget extends StatefulWidget {
 class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
   bool updatePassword = false;
   bool show = false;
+  File file;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        Container(
+            margin: EdgeInsets.symmetric(vertical: 15),
+            child: Container(
+                child: Column(children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Container(
+                  child: file != null
+                      ? Image.file(
+                          file,
+                          fit: BoxFit.fill,
+                        )
+                      : Container(),
+                  margin: EdgeInsets.all(20),
+                  width: 80,
+                  height: 100,
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Style.darkColor)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 13, right: 20),
+                  child: Text('Update Image'),
+                ),
+                InkWell(
+                    onTap: () async {
+                      var image = await ImagePicker().getImage(
+                        source: ImageSource.gallery,
+                        maxWidth: 600,
+                      );
+
+                      if (image == null) {
+                        return;
+                      }
+                      setState(() {
+                        file = File(image.path);
+                      });
+                    },
+                    child: Column(
+                        // crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Icon(Icons.camera_alt),
+                          Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text("Add"))
+                        ]))
+              ])
+            ]))),
         ...User.attributesValues
             .map(
               (attr) => attr.update
