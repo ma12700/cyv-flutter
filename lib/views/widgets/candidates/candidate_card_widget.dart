@@ -1,7 +1,8 @@
-import 'package:cyv/models/candidates_model.dart';
+import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/screens/candidate_profile_screen.dart';
+import 'package:cyv/views/widgets/candidates/resultInfo_widget.dart';
 import 'package:flutter/material.dart';
 
 class CandidateCardWidget extends StatelessWidget {
@@ -14,8 +15,8 @@ class CandidateCardWidget extends StatelessWidget {
     Size deviseSize = MediaQuery.of(context).size;
     Candidate candidate =
         CandidatesModel.tracks[trackID].candidates[candidateIndex];
-    final bool flag = CandidatesModel.tracks[trackID].votes.length <
-        CandidatesModel.tracks[trackID].numberOfWinners;
+    /* final bool flag = CandidatesModel.tracks[trackID].votes.length <
+        CandidatesModel.tracks[trackID].numberOfWinners; */
 
     return InkWell(
       onTap: () {
@@ -61,6 +62,7 @@ class CandidateCardWidget extends StatelessWidget {
                               textAlign: TextAlign.center,
                               softWrap: true,
                             )),
+                        /* if (User.time == "Votings")
                         Container(
                           padding: EdgeInsets.all(10),
                           child: ElevatedButton(
@@ -87,8 +89,8 @@ class CandidateCardWidget extends StatelessWidget {
                                   color: Style.lightColor, fontSize: 15),
                             ),
                           ),
-                        )
-                        //ResultInfoWidget(Style.primaryColor, 70, 120, 1000)
+                        ) */
+                        ResultInfoWidget(Style.primaryColor, 70, 120, 1000)
                       ],
                     ),
                   )),

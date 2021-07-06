@@ -28,7 +28,7 @@ class AuthButtonWidget extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               authMode == AuthMode.Login
-                  ? (lang == 'En' ? "Login" : dictionary['Login'])
+                  ? (lang == 'En' ? "Next" : dictionary['Next'])
                   : authMode == AuthMode.Reset
                       ? (lang == 'En' ? "Send" : dictionary['Send'])
                       : (lang == 'En' ? "Verify" : dictionary['Verify']),

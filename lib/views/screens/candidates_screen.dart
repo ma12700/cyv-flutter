@@ -1,4 +1,5 @@
-import 'package:cyv/models/candidates_model.dart';
+import 'package:cyv/controllers/candidate.dart';
+import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/views/widgets/app_bar_widget.dart';
 import 'package:cyv/views/widgets/candidates/candidate_card_widget.dart';
@@ -38,7 +39,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
 
   Widget loadCandidates() {
     return FutureBuilder(
-        future: CandidatesModel.fetchCandidates(trackID),
+        future: CandidatesCtr.fetchCandidates(trackID),
         builder: (ctx, fetchResultSnapshot) =>
             fetchResultSnapshot.connectionState == ConnectionState.waiting
                 ? Center(

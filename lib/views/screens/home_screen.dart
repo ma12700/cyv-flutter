@@ -1,9 +1,13 @@
-import 'package:cyv/models/candidates_model.dart';
-import 'package:cyv/models/infoPages_model.dart';
+import 'package:cyv/controllers/candidate.dart';
+import 'package:cyv/controllers/infoPages.dart';
+import 'package:cyv/controllers/candidature.dart';
+import 'package:cyv/controllers/user.dart';
+import 'package:cyv/models/candidates.dart';
+import 'package:cyv/models/infoPages.dart';
 import 'package:cyv/models/language.dart';
-import 'package:cyv/models/requirements_model.dart';
+import 'package:cyv/models/requirements.dart';
 import 'package:cyv/models/style.dart';
-import 'package:cyv/models/user_model.dart';
+import 'package:cyv/models/user.dart';
 import 'package:cyv/views/widgets/app_bar_widget.dart';
 import 'package:cyv/views/widgets/candidature.dart';
 import 'package:cyv/views/widgets/tracks_widget.dart';
@@ -56,36 +60,36 @@ class HomeScreenState extends State<HomeScreen> {
       case 'Home':
         return InfoPageModel.pages.isNotEmpty
             ? PagesWidget()
-            : future(InfoPageModel.fetchPages, PagesWidget());
+            : future(InfoPagesCtr.fetchPages, PagesWidget());
       case 'Candidates':
         return CandidatesModel.tracks.isNotEmpty
             ? TracksWidget()
-            : future(CandidatesModel.fetchTracks, TracksWidget());
+            : future(CandidatesCtr.fetchTracks, TracksWidget());
       case 'Cnadidature':
         return CandidatesModel.tracks.isNotEmpty
             ? TracksWidget(
                 isCandidature: true,
               )
             : future(
-                CandidatesModel.fetchTracks, TracksWidget(isCandidature: true));
+                CandidatesCtr.fetchTracks, TracksWidget(isCandidature: true));
       case 'CnadidatureForm':
         return RequirementsModel.requirements.isNotEmpty
             ? CandidatureForm() //must be updated (is remining)
-            : future(RequirementsModel.fetchRequirements, CandidatureForm());
+            : future(CandidatureCtr.fetchRequirements, CandidatureForm());
       case 'Waiving':
         return WaiveWidget();
       case 'Voting':
-        return future(CandidatesModel.fetchAll, VoteWidget());
+        return future(CandidatesCtr.fetchAll, VoteWidget());
       case 'Result':
         return CandidatesModel.tracks.isNotEmpty
             ? TracksWidget()
-            : future(CandidatesModel.fetchTracks,
+            : future(CandidatesCtr.fetchTracks,
                 TracksWidget()); //From Smart Contract
       case 'statistics':
         return Subscribechart(barIndex); //Waited for updating
       case 'My profile':
         return User.attributesValues.isEmpty
-            ? future(User.getMe, MyProfileWidget(barIndex))
+            ? future(UserCtr.updateData, MyProfileWidget(barIndex))
             : MyProfileWidget(barIndex);
       case 'Help':
         return HelpWidget();
@@ -106,8 +110,11 @@ class HomeScreenState extends State<HomeScreen> {
           },
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.people), label: 'All Voters'),
-            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Result')
+                icon: Icon(Icons.people),
+                label: lang == "En" ? 'All Voters' : 'جميع الناخبين'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                label: lang == "En" ? 'Result' : 'النتيجة')
           ]);
     } else if (bodywidget == 'My profile') {
       var bottom = BottomNavigationBar(
@@ -120,13 +127,15 @@ class HomeScreenState extends State<HomeScreen> {
           },
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.person_pin_outlined), label: 'profile'),
+                icon: Icon(Icons.person_pin_outlined),
+                label: lang == "En" ? 'profile' : 'الملف الشخصى'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.mode_edit_outlined), label: 'Update Profile'),
+                icon: Icon(Icons.mode_edit_outlined),
+                label: lang == "En" ? 'Update Profile' : 'تحديث بياناتى'),
             if (User.type == "Candidate")
               BottomNavigationBarItem(
                   icon: Icon(Icons.edit_attributes_outlined),
-                  label: 'Edit Program')
+                  label: lang == "En" ? 'Edit Program' : 'تعديل البرنامج')
           ]);
 
       return bottom;

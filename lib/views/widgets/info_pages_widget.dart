@@ -1,4 +1,4 @@
-import 'package:cyv/models/infoPages_model.dart';
+import 'package:cyv/models/infoPages.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/screens/page_content_screen.dart';
 import 'package:flutter/material.dart';

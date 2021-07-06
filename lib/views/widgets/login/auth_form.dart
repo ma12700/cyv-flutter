@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:cyv/controllers/auth.dart';
 import 'package:cyv/controllers/dialog.dart';
-import 'package:cyv/models/user_model.dart';
+import 'package:cyv/models/language.dart';
 import 'package:cyv/views/screens/face_login_screen.dart';
 import 'package:cyv/views/widgets/login/auth_button_widget.dart';
 import 'package:cyv/views/widgets/login/confirmWidget.dart';
@@ -37,25 +37,24 @@ class _AuthFormStrState extends State<AuthForm> {
     setState(() {
       _isLoading = true;
     });
-    try {
-      if (_authMode == AuthMode.Login) {
-        Navigator.of(context).pushNamed(FaceRecognitionScreen.routeName);
+    if (_authMode == AuthMode.Login) {
+      Navigator.of(context).pushNamed(FaceRecognitionScreen.routeName);
+    } else {
+      int responseCode = await AuthCtr.resetPassword();
+      if (responseCode == 200) {
+        showErrorDialog(
+            lang == "En"
+                ? 'Check Your Email Inbox'
+                : 'تفقد محتوى بريدك الالكترونى',
+            context,
+            title: 'Confirm');
       } else {
-        int responseCode = await User.resetPassword();
-        if (responseCode == 200) {
-          showErrorDialog('Check Your Email Inbox', context, title: 'Confirm');
-        } else {
-          showErrorDialog('Wrong Email!', context);
-        }
+        showErrorDialog(
+            lang == "En"
+                ? 'Wrong Email or Not Exist!'
+                : 'الايميل غير صحيح أو غير موجود',
+            context);
       }
-      /* Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen())); */
-    } on SocketException {
-      showErrorDialog('No Internet connection', context);
-    } on TimeoutException catch (_) {
-      showErrorDialog('Connection timeout', context);
-    } catch (e) {
-      showErrorDialog('$e', context);
     }
 
     setState(() {

@@ -1,5 +1,6 @@
+import 'package:cyv/controllers/candidature.dart';
 import 'package:cyv/models/language.dart';
-import 'package:cyv/models/requirements_model.dart';
+import 'package:cyv/models/requirements.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/widgets/form/topPart.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _CandidatureFormState extends State<CandidatureForm> {
                       top: 200, left: 10, right: 10, bottom: 80),
                   child: RequirementsModel.requirements.isEmpty
                       ? FutureBuilder(
-                          future: RequirementsModel.fetchRequirements(),
+                          future: CandidatureCtr.fetchRequirements(),
                           builder: (ctx, fetchResultSnapshot) =>
                               fetchResultSnapshot.connectionState ==
                                       ConnectionState.waiting

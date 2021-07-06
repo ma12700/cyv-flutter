@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'package:cyv/controllers/auth.dart';
 import 'package:cyv/controllers/dialog.dart';
 import 'package:cyv/models/language.dart';
-import 'package:cyv/models/user_model.dart';
 import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
@@ -52,10 +52,10 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
           .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
     } else {
       setState(() {
-        print('here ' + result);
         isSend = false;
       });
-      showErrorDialog(result, context);
+
+      showErrorDialog((lang == "En" ? result : dictionary[lang]), context);
     }
   }
 
@@ -72,7 +72,7 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
         setState(() {
           isSend = true;
         });
-        await User.login(file, onComplete);
+        await AuthCtr.login(file, onComplete);
       } else {
         print(_faces.length);
       }
@@ -116,7 +116,7 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
         ),
         !isSend
             ? ButtonWidget(
-                text: (lang == 'En' ? "Capture" : dictionary['Capture']),
+                text: (lang == 'En' ? "Login" : dictionary['Login']),
                 navigate: faceDetect,
               )
             : CircularProgressIndicator(),

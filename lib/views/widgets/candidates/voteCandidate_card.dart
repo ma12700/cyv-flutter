@@ -1,4 +1,4 @@
-import 'package:cyv/models/candidates_model.dart';
+import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:flutter/material.dart';

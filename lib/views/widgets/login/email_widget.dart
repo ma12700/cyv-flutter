@@ -1,6 +1,6 @@
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
-import 'package:cyv/models/user_model.dart';
+import 'package:cyv/models/user.dart';
 import 'package:flutter/material.dart';
 
 class EmailWidget extends StatelessWidget {
@@ -20,7 +20,11 @@ class EmailWidget extends StatelessWidget {
         labelText: (lang == 'En' ? "Email" : dictionary['Email']),
       ),
       validator: (value) {
-        if (value.isEmpty) {
+        bool emailValid = RegExp(
+                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            .hasMatch(value);
+
+        if (!emailValid) {
           return (lang == 'En' ? "Enter valid Email" : dictionary["EVE"]);
         }
 

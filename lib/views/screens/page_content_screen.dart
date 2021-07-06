@@ -1,4 +1,4 @@
-import 'package:cyv/models/infoPages_model.dart';
+import 'package:cyv/models/infoPages.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/widgets/app_bar_widget.dart';

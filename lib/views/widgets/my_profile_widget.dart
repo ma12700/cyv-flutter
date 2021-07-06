@@ -1,10 +1,10 @@
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
-import 'package:cyv/models/user_model.dart';
+import 'package:cyv/models/user.dart';
 import 'package:cyv/views/widgets/profiles/updateProfile.dart';
 import 'package:flutter/material.dart';
 import 'profiles/taskrow.dart';
-import 'write_Program_screen.dart';
+import 'profiles/write_Program_screen.dart';
 
 class MyProfileWidget extends StatefulWidget {
   final int index;
@@ -69,14 +69,18 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                                 margin: EdgeInsets.all(10),
                               ),
                               //name
-                              Text(
-                                User.name,
-                                style: new TextStyle(
-                                    fontSize: 22.0,
-                                    color: Style.darkColor,
-                                    fontWeight: FontWeight.w400),
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
+                              Container(
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  User.name,
+                                  style: new TextStyle(
+                                      fontSize: 22.0,
+                                      color: Style.darkColor,
+                                      fontWeight: FontWeight.w400),
+                                  overflow: TextOverflow.fade,
+                                  textAlign: TextAlign.center,
+                                ),
                               )
                             ],
                           ),

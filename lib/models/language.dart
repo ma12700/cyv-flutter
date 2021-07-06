@@ -53,5 +53,10 @@ final dictionary = {
   "WYP": "أدخل برنامجك",
   "Save": "أحفظ",
   "LAG": "الدخول كمتصفح",
-  "RF": "طلب ترشح"
+  "RF": "طلب ترشح",
+  "Next": "التالى",
+  "no face at this image": "لا يوجد وجه فى هذه الصورة",
+  "not matched": 'لا يوجد تطابق',
+  "email not Found or password Wrong":
+      "هذا الايميل غير موجود أو كلمة المرور خاطئة"
 };

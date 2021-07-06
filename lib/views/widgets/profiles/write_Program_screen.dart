@@ -1,30 +1,57 @@
+import 'package:cyv/controllers/candidate.dart';
+import 'package:cyv/controllers/dialog.dart';
+import 'package:cyv/controllers/user.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
-import 'package:cyv/models/user_model.dart';
+import 'package:cyv/models/user.dart';
 import 'package:flutter/material.dart';
 
 class WriteProgramScreen extends StatefulWidget {
-  final urlLink = {
-    (lang == 'En' ? "twitter link" : dictionary['TL']):
-        "assets/images/twitter.png",
-    (lang == 'En' ? "facebook link" : dictionary['FL']):
-        "assets/images/facebook.png",
-  };
   @override
   _WriteProgramScreenState createState() => _WriteProgramScreenState();
 }
 
 class _WriteProgramScreenState extends State<WriteProgramScreen> {
   final _formKey = GlobalKey<FormState>();
-  void submit() {
+  var _isLoading = false;
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
     _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+
+    bool isSucceed = await CandidatesCtr.updateProgram();
+    if (isSucceed) {
+      showErrorDialog(
+          lang == "En" ? "Updated Successfully" : "تم التحديث", context,
+          title: 'Confirm');
+    } else {
+      showErrorDialog(lang == "En" ? 'An Error Occurred' : 'حدث خطأ!', context);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    //final titleName = ModalRoute.of(context).settings.arguments;
+    final urlLink = {
+      (lang == 'En' ? "facebook link" : dictionary['FL']): {
+        "icon": "assets/images/facebook.png",
+        "value": User.facebookURL
+      },
+      (lang == 'En' ? "twitter link" : dictionary['TL']): {
+        "icon": "assets/images/twitter.png",
+        "value": User.twitterURL
+      },
+    };
     return FutureBuilder(
-      future: User.fetchProgram(),
+      future: UserCtr.fetchProgram(),
       builder: (ctx, fetchResultSnapshot) =>
           fetchResultSnapshot.connectionState == ConnectionState.waiting
               ? Center(
@@ -38,7 +65,7 @@ class _WriteProgramScreenState extends State<WriteProgramScreen> {
                       children: [
                         //add links
                         Column(
-                            children: widget.urlLink.entries.map((url) {
+                            children: urlLink.entries.map((url) {
                           return Container(
                             padding: EdgeInsets.all(10),
                             margin: EdgeInsets.all(10),
@@ -67,14 +94,43 @@ class _WriteProgramScreenState extends State<WriteProgramScreen> {
                                   decoration: BoxDecoration(
                                       image: DecorationImage(
                                           image: AssetImage(
-                                            url.value,
+                                            url.value['icon'],
                                           ),
                                           fit: BoxFit.fill)),
                                 ),
                                 Expanded(
                                     child: Container(
                                         padding: EdgeInsets.only(left: 16),
-                                        child: TextField(
+                                        child: TextFormField(
+                                          initialValue: url.value['value'],
+                                          validator: (value) {
+                                            if (value != "") {
+                                              if ((lang == 'En' &&
+                                                      url.key ==
+                                                          "facebook link") ||
+                                                  (lang != 'En' &&
+                                                      url.key ==
+                                                          dictionary['FL'])) {
+                                                if (!url.value['value'].startsWith(
+                                                    'https://www.facebook.com/')) {
+                                                  return url.key + lang == "En"
+                                                      ? " must start with "
+                                                      : " يجب أن يبدأ ب " +
+                                                          " https://www.facebook.com/";
+                                                }
+                                              } else {
+                                                if (!url.value['value']
+                                                    .startsWith(
+                                                        'https://twitter.com/')) {
+                                                  return url.key + lang == "En"
+                                                      ? " must start with "
+                                                      : " يجب أن يبدأ ب " +
+                                                          " https://twitter.com/";
+                                                }
+                                              }
+                                            }
+                                            return null;
+                                          },
                                           decoration: InputDecoration(
                                               hintText: url.key,
                                               hintStyle: TextStyle(
@@ -121,7 +177,7 @@ class _WriteProgramScreenState extends State<WriteProgramScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             InkWell(
-                              onTap: () {},
+                              onTap: _submit,
                               child: Container(
                                 padding: EdgeInsets.all(8),
                                 width: 120,

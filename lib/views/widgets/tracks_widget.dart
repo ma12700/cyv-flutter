@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cyv/models/candidates_model.dart';
+import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/views/screens/candidates_screen.dart';
 import 'package:cyv/views/widgets/candidature.dart';

@@ -1,6 +1,6 @@
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
-import 'package:cyv/models/user_model.dart';
+import 'package:cyv/models/user.dart';
 import 'package:flutter/material.dart';
 
 class PasswordWidget extends StatefulWidget {

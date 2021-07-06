@@ -1,4 +1,4 @@
-import 'package:cyv/models/user_model.dart';
+import 'package:cyv/models/user.dart';
 import 'package:flutter/material.dart';
 
 class DetailsWidget extends StatelessWidget {
