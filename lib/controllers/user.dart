@@ -31,7 +31,7 @@ class UserCtr {
     return true;
   }
 
-  static Future<int> updateStatistics() async {
+  static Future<bool> updateStatistics() async {
     List<Map<String, String>> statistics = [];
     User.attributesValues.forEach((attr) {
       if (attr.update) {
@@ -46,7 +46,11 @@ class UserCtr {
           'x-auth-token': User.token
         },
         body: json.encode({"statistics": statistics}));
-
-    return response.statusCode;
+    if (response.statusCode == 200) {
+      statistics.forEach((attr) {
+        User.otherAttributes[attr['key']] = attr['value'];
+      });
+    }
+    return response.statusCode == 200;
   }
 }

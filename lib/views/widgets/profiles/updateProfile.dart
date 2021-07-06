@@ -218,8 +218,8 @@ class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
             child: ButtonWidget(
               text: (lang == "En" ? 'Update' : 'تحديث'),
               navigate: () async {
-                final int responseCode = await UserCtr.updateStatistics();
-                if (responseCode == 200) {
+                final bool result = await UserCtr.updateStatistics();
+                if (result) {
                   showErrorDialog(
                       (lang == "En" ? "Updated Successfully" : "تم التعديل"),
                       context,
