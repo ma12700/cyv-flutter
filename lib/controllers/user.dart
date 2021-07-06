@@ -32,18 +32,21 @@ class UserCtr {
   }
 
   static Future<int> updateStatistics() async {
-    final statistics = User.attributesValues.map((attr) {
+    List<Map<String, String>> statistics = [];
+    User.attributesValues.forEach((attr) {
       if (attr.update) {
-        return {attr.key: attr.answer};
+        statistics.add({"key": attr.key, "value": attr.answer});
       }
-    }).toList();
-    var url = Uri.parse(AuthCtr.baseUrl + 'user/updateStatistics');
-    final response = await http.put(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-auth-token': User.token
-    }, body: {
-      "statistics": statistics
     });
+    print(statistics);
+    var url = Uri.parse(AuthCtr.baseUrl + 'user/updateStatistics');
+    final response = await http.put(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': User.token
+        },
+        body: json.encode({"statistics": statistics}));
+
     return response.statusCode;
   }
 }

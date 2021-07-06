@@ -77,7 +77,7 @@ class HomeScreenState extends State<HomeScreen> {
             ? CandidatureForm() //must be updated (is remining)
             : future(CandidatureCtr.fetchRequirements, CandidatureForm());
       case 'Waiving':
-        return WaiveWidget();
+        return WaiveWidget(changeBody);
       case 'Voting':
         return future(CandidatesCtr.fetchAll, VoteWidget());
       case 'Result':

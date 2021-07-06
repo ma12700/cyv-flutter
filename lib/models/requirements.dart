@@ -13,7 +13,7 @@ class RequirementsModel {
   static List<Requirement> requirements = [];
   static List<Map<String, dynamic>> request = [];
 
-  static void storeRequirements(Map<String, dynamic> data) async {
+  static void storeRequirements(List<dynamic> data) async {
     requirements.clear();
     (data[0]['requirements'] as List<dynamic>).forEach((requirement) {
       var values = (requirement['values'] as List<dynamic>)
