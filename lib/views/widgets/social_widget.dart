@@ -1,4 +1,7 @@
+import 'package:cyv/controllers/dialog.dart';
+import 'package:cyv/models/language.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SocialWidget extends StatelessWidget {
   final String img, url;
@@ -7,8 +10,16 @@ class SocialWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        print('hcgjhkk');
+      onTap: () async {
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          showErrorDialog(
+              lang == "En"
+                  ? "'Could not launch this URL"
+                  : "التطبيق لا ييستطيع فتح هذا الرابط",
+              context);
+        }
       },
       child: Container(
         margin: const EdgeInsets.all(5),

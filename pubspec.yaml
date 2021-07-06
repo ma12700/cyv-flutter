@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.1
+  url_launcher: ^5.7.10 
   provider: ^5.0.0
   shared_preferences: ^2.0.5
   image_picker: ^0.7.4
@@ -43,8 +44,6 @@ dependencies:
   animated_text_kit: ^4.2.0
   camera: ^0.8.1
   google_ml_vision: ^0.0.2+1
-  dio: ^4.0.0
-  axios: ^1.0.1+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
