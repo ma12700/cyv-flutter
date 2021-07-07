@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cyv/controllers/dialog.dart';
+import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/controllers/user.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';

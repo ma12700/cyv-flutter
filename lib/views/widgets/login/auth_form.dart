@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cyv/controllers/auth.dart';
-import 'package:cyv/controllers/dialog.dart';
+import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/views/screens/face_login_screen.dart';
 import 'package:cyv/views/widgets/login/auth_button_widget.dart';

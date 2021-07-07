@@ -1,4 +1,4 @@
-import 'package:cyv/controllers/dialog.dart';
+import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/models/language.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';

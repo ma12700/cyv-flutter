@@ -1,5 +1,5 @@
 import 'package:cyv/controllers/candidate.dart';
-import 'package:cyv/controllers/dialog.dart';
+import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user.dart';

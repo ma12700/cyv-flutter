@@ -58,8 +58,6 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   @override
   Widget build(BuildContext context) {
     trackID = ModalRoute.of(context).settings.arguments;
-    print(trackID);
-    print(CandidatesModel.tracks[trackID]);
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(
