@@ -4,8 +4,9 @@ import 'package:cyv/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserCtr {
+  static bool programFetched = false;
   static Future<bool> fetchProgram() async {
-    try {
+    if (!programFetched) {
       var url = Uri.parse(AuthCtr.baseUrl + 'candidate/me');
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -13,9 +14,7 @@ class UserCtr {
       });
       var data = json.decode(response.body);
       User.storeProgramData(data);
-    } catch (e) {
-      print('error: ');
-      print(e.toString());
+      programFetched = true;
     }
     return true;
   }

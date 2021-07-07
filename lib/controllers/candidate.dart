@@ -70,15 +70,17 @@ class CandidatesCtr {
   }
 
   static Future<bool> updateProgram() async {
-    var url = Uri.parse(AuthCtr.baseUrl + 'candidate/updateProfile');
-    final response = await http.put(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-auth-token': User.token
-    }, body: {
-      "program": User.program,
-      "facebookURL": User.facebookURL,
-      "twitterURL": User.twitterURL
-    });
-    return response.statusCode == 200;
+    var url = Uri.parse(AuthCtr.baseUrl + 'candidate/UpdateProfile');
+    final response = await http.put(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': User.token
+        },
+        body: json.encode({
+          "program": User.program,
+          "facebookURL": User.facebookURL,
+          "twitterURL": User.twitterURL
+        }));
+    return response.statusCode == 201;
   }
 }
