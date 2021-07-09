@@ -24,10 +24,10 @@ class CandidateProfileScreenState extends State<CandidateProfileScreen> {
     // get candidate index
     final indexes = ModalRoute.of(context).settings.arguments as List<dynamic>;
     final String trackID = indexes[0] as String;
-    final int candidateIndex = indexes[1] as int;
+    final String candidateID = indexes[1] as String;
 
     Candidate candidate =
-        CandidatesModel.tracks[trackID].candidates[candidateIndex];
+        CandidatesModel.tracks[trackID].candidates[candidateID];
 
     final double height = MediaQuery.of(context).size.height;
 

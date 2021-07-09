@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cyv/controllers/auth.dart';
+import 'package:cyv/controllers/contract.dart';
 import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -51,21 +52,36 @@ class CandidatesCtr {
       'Content-Type': 'application/json; charset=UTF-8',
       'x-auth-token': User.token
     });
-
+    if (response.statusCode == 200) {
+      await ContractCtr.submit("waive", [User.id]);
+    }
     return response.statusCode == 200;
   }
 
   static Future<bool> vote() async {
     var url = Uri.parse(AuthCtr.baseUrl + 'candidate/vote');
-    final response = await http.post(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-auth-token': User.token
-    }, body: {
-      "result": CandidatesModel.tracks.entries
-          .map(
-              (track) => {"track": track.key, "candidateID": track.value.votes})
-          .toList()
-    });
+    final response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': User.token
+        },
+        body: json.encode({
+          "result": CandidatesModel.tracks.entries
+              .map((track) =>
+                  {"track": track.key, "candidateID": track.value.votes})
+              .toList()
+        }));
+    if (response.statusCode == 200) {
+      CandidatesModel.tracks.forEach((key, value) async {
+        await ContractCtr.submit("vote", [
+          User.nid,
+          key,
+          value.votes,
+          [value.dividedBy],
+          [User.otherAttributes[value.dividedBy]]
+        ]);
+      });
+    }
     return response.statusCode == 200;
   }
 

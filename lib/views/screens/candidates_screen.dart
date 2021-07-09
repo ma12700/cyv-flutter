@@ -15,7 +15,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
   String trackID;
   // used when search about candidates
   void changeVisibility(String value) {
-    CandidatesModel.tracks[trackID].candidates.forEach((candidate) {
+    CandidatesModel.tracks[trackID].candidates.forEach((key, candidate) {
       if (candidate.name.toLowerCase().contains(value.toLowerCase())) {
         candidate.isVisible = true;
       } else {
@@ -79,13 +79,10 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
                 child: SearchWidget(search: search)),
             //     // list of candidates
             Column(
-              children: CandidatesModel.tracks[trackID].candidates
+              children: CandidatesModel.tracks[trackID].candidates.entries
                   .map((e) => Container(
-                        child: e.isVisible
-                            ? CandidateCardWidget(
-                                trackID,
-                                CandidatesModel.tracks[trackID].candidates
-                                    .indexOf(e))
+                        child: e.value.isVisible
+                            ? CandidateCardWidget(trackID, e.key)
                             : Container(),
                       ))
                   .toList(),

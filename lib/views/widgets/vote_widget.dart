@@ -11,25 +11,29 @@ class VoteWidget extends StatefulWidget {
 }
 
 class _VoteWidgetState extends State<VoteWidget> {
-  var keys;
+  var trackKeys;
+  var candidatesKeys;
   int _trackIndex = 0;
   int n = CandidatesModel.tracks.length;
   final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    keys = CandidatesModel.tracks.keys.toList();
+    trackKeys = CandidatesModel.tracks.keys.toList();
+    candidatesKeys =
+        CandidatesModel.tracks[trackKeys[_trackIndex]].candidates.keys.toList();
     //final size = MediaQuery.of(context).size;
     return Column(
       children: [
-        TitleCard(CandidatesModel.tracks[keys[_trackIndex]].name),
+        TitleCard(CandidatesModel.tracks[trackKeys[_trackIndex]].name),
         Expanded(
           child: ListView.builder(
               scrollDirection: Axis.vertical,
               controller: scrollController,
-              itemCount:
-                  CandidatesModel.tracks[keys[_trackIndex]].candidates.length,
+              itemCount: CandidatesModel
+                  .tracks[trackKeys[_trackIndex]].candidates.length,
               itemBuilder: (context, index) {
-                return CandidateCardWidget(keys[_trackIndex], index,
+                return CandidateCardWidget(
+                    trackKeys[_trackIndex], candidatesKeys[index],
                     vote: vote);
               }),
         ),
@@ -40,7 +44,7 @@ class _VoteWidgetState extends State<VoteWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             (lang == 'En' ? 'You must choose (' : dictionary["YMC"]) +
-                CandidatesModel.tracks[keys[_trackIndex]].numberOfWinners
+                CandidatesModel.tracks[trackKeys[_trackIndex]].numberOfWinners
                     .toString() +
                 (lang == 'En' ? ") candidate(s)." : dictionary["CO"]),
             style: TextStyle(
@@ -77,21 +81,21 @@ class _VoteWidgetState extends State<VoteWidget> {
                 text: _trackIndex == n - 1
                     ? (lang == 'En' ? 'Cast Vote' : dictionary['CV'])
                     : (lang == 'En' ? 'Next' : dictionary['Next']),
-                navigate:
-                    CandidatesModel.tracks[keys[_trackIndex]].votes.length ==
-                            CandidatesModel
-                                .tracks[keys[_trackIndex]].numberOfWinners
-                        ? () async {
-                            if (_trackIndex != n - 1) {
-                              setState(() {
-                                changeTrack(true);
-                                scrollController.jumpTo(0);
-                              });
-                            } else {
-                              //bool result = await CandidatesModel.vote();
-                            }
-                          }
-                        : null,
+                navigate: CandidatesModel
+                            .tracks[trackKeys[_trackIndex]].votes.length ==
+                        CandidatesModel
+                            .tracks[trackKeys[_trackIndex]].numberOfWinners
+                    ? () async {
+                        if (_trackIndex != n - 1) {
+                          setState(() {
+                            changeTrack(true);
+                            scrollController.jumpTo(0);
+                          });
+                        } else {
+                          //bool result = await CandidatesModel.vote();
+                        }
+                      }
+                    : null,
               )
             ],
           ),
@@ -111,14 +115,14 @@ class _VoteWidgetState extends State<VoteWidget> {
     );
   }
 
-  void vote(Candidate candidate) {
+  void vote(Candidate candidate, String candidateID) {
     setState(() {
       candidate.isSelected = !candidate.isSelected;
       if (candidate.isSelected) {
-        CandidatesModel.tracks[keys[_trackIndex]].votes.add(candidate.id);
+        CandidatesModel.tracks[trackKeys[_trackIndex]].votes.add(candidateID);
       } else {
-        CandidatesModel.tracks[keys[_trackIndex]].votes
-            .removeWhere((element) => element == candidate.id);
+        CandidatesModel.tracks[trackKeys[_trackIndex]].votes
+            .removeWhere((element) => element == candidateID);
       }
     });
   }

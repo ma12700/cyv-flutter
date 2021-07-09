@@ -5,7 +5,6 @@ import 'package:cyv/views/screens/page_content_screen.dart';
 import 'package:cyv/views/screens/candidate_profile_screen.dart';
 import 'package:cyv/views/widgets/candidature.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import './views/screens/splash_screen.dart';
 import 'views/screens/face_login_screen.dart';
 import './views/screens/login_screen.dart';

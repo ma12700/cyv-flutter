@@ -1,0 +1,270 @@
+[
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "NofWinners",
+        "type": "uint256"
+      },
+      {
+        "name": "dividedBy",
+        "type": "string"
+      }
+    ],
+    "name": "addTrack",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "nationalID",
+        "type": "string"
+      },
+      {
+        "name": "etherumAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addVoter",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "candidators",
+    "outputs": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "_id",
+        "type": "string"
+      },
+      {
+        "name": "voterCount",
+        "type": "uint256"
+      },
+      {
+        "name": "TrackID",
+        "type": "string"
+      },
+      {
+        "name": "dividedBy",
+        "type": "string"
+      },
+      {
+        "name": "candidateAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "tracks",
+    "outputs": [
+      {
+        "name": "_id",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "NofWinners",
+        "type": "uint256"
+      },
+      {
+        "name": "dividedBy",
+        "type": "string"
+      },
+      {
+        "name": "adminAddress",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "TrackID",
+        "type": "string"
+      }
+    ],
+    "name": "returnResult",
+    "outputs": [
+      {
+        "name": "return1",
+        "type": "string[]"
+      },
+      {
+        "name": "return2",
+        "type": "string[]"
+      },
+      {
+        "name": "return3",
+        "type": "string[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "_id",
+        "type": "string"
+      },
+      {
+        "name": "TrackID",
+        "type": "string"
+      },
+      {
+        "name": "dividedBy",
+        "type": "string"
+      },
+      {
+        "name": "candidateAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addCandidate",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "voters",
+    "outputs": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "nationalID",
+        "type": "string"
+      },
+      {
+        "name": "etherumAddress",
+        "type": "address"
+      },
+      {
+        "name": "state",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "voterNationalID",
+        "type": "string"
+      },
+      {
+        "name": "TrackID",
+        "type": "string"
+      },
+      {
+        "name": "candidates",
+        "type": "string[]"
+      },
+      {
+        "name": "keys",
+        "type": "string[]"
+      },
+      {
+        "name": "values",
+        "type": "string[]"
+      }
+    ],
+    "name": "vote",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "TrackID",
+        "type": "string"
+      }
+    ],
+    "name": "deleteTrack",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "CandidateID",
+        "type": "string"
+      }
+    ],
+    "name": "waive",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
