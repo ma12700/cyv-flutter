@@ -22,6 +22,7 @@ class User {
   static String program = "";
   static String facebookURL = "";
   static String twitterURL = "";
+  static String trackID = "";
   static String time = "Result";
   static Map<String, dynamic> otherAttributes = {};
   static List<Attribute> attributesValues = [];
@@ -45,6 +46,7 @@ class User {
     program = data['program'];
     facebookURL = data['facebookURL'];
     twitterURL = data['twitterURL'];
+    trackID = data['trackID'];
   }
 
   static void updateData(Map<String, dynamic> data) {

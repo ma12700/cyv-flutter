@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cyv/controllers/auth.dart';
 import 'package:cyv/controllers/contract.dart';
+import 'package:cyv/models/analysis.dart';
 import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -98,5 +99,29 @@ class CandidatesCtr {
           "twitterURL": User.twitterURL
         }));
     return response.statusCode == 201;
+  }
+
+  static Future<bool> fetchAnalysis() async {
+    if (CandidatesModel.tracks.isEmpty) {
+      await fetchTracks();
+    }
+    var url = Uri.parse(
+        'https://floating-bastion-12576.herokuapp.com/statisticsAnalysis');
+    final response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': User.token
+        },
+        body: json.encode({
+          "dividedByKey": CandidatesModel.tracks[User.trackID].dividedBy,
+          "dividedByValue": User
+              .otherAttributes[CandidatesModel.tracks[User.trackID].dividedBy],
+        }));
+    var data = json.decode(response.body);
+    print('end');
+    print(data);
+    ChartData.storeAllUserAnalysis(data['userStatistics']);
+
+    return true;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user.dart';
+import 'package:cyv/views/widgets/profiles/profileData.dart';
 import 'package:cyv/views/widgets/profiles/updateProfile.dart';
 import 'package:flutter/material.dart';
 import 'profiles/taskrow.dart';
@@ -14,25 +15,25 @@ class MyProfileWidget extends StatefulWidget {
 }
 
 class _MyProfileWidgetState extends State<MyProfileWidget> {
-  int index = 0;
-
   @override
   Widget build(BuildContext context) {
-    return widget.index == 0
+    return widget.index < 2
         ? SingleChildScrollView(
             child: Stack(
               children: [
                 // vertical narrow line
-                Positioned(
-                  top: 0.0,
-                  bottom: 0.0,
-                  left: lang == "En" ? 31.5 : null,
-                  right: lang == "En" ? null : 31.5,
-                  child: new Container(
-                    width: 1.0,
-                    color: Style.nullColor,
-                  ),
-                ),
+                widget.index == 0
+                    ? Positioned(
+                        top: 0.0,
+                        bottom: 0.0,
+                        left: lang == "En" ? 31.5 : null,
+                        right: lang == "En" ? null : 31.5,
+                        child: new Container(
+                          width: 1.0,
+                          color: Style.nullColor,
+                        ),
+                      )
+                    : Container(),
                 // backimage - user image - name
                 Column(
                   children: <Widget>[
@@ -87,31 +88,14 @@ class _MyProfileWidgetState extends State<MyProfileWidget> {
                         ),
                       ],
                     ),
-                    TaskRow((lang == 'En' ? 'Name' : dictionary['Name']),
-                        User.name, Style.primaryColor),
-                    TaskRow((lang == 'En' ? 'Email' : dictionary['Email']),
-                        User.email, Style.secondColor),
-                    TaskRow(
-                        (lang == 'En'
-                            ? 'National ID'
-                            : dictionary['National ID']),
-                        User.nid,
-                        Style.primaryColor),
-                    ...User.otherAttributes.entries.map((e) {
-                      index = (index + 1) % 2;
-                      return TaskRow(
-                        e.key,
-                        e.value,
-                        index == 1 ? Style.secondColor : Style.primaryColor,
-                      );
-                    }).toList(),
+                    widget.index == 0
+                        ? ProfileDataWidget()
+                        : UpdateProfileWidget()
                   ],
                 ),
               ],
             ),
           )
-        : widget.index == 1
-            ? UpdateProfileWidget()
-            : WriteProgramScreen();
+        : WriteProgramScreen();
   }
 }

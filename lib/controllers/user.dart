@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cyv/controllers/auth.dart';
+import 'package:cyv/models/analysis.dart';
 import 'package:cyv/models/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,6 +15,7 @@ class UserCtr {
       });
       var data = json.decode(response.body);
       User.storeProgramData(data);
+      ChartData.storeResultAnalysis(data['voters']);
       programFetched = true;
     }
     return true;
