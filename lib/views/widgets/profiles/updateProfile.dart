@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/controllers/user.dart';
 import 'package:cyv/models/language.dart';
@@ -7,7 +5,6 @@ import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class UpdateProfileWidget extends StatefulWidget {
   _UpdateProfileWidgetState createState() => _UpdateProfileWidgetState();
@@ -16,8 +13,6 @@ class UpdateProfileWidget extends StatefulWidget {
 class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
   bool updatePassword = false;
   bool show = false;
-  File file;
-  int index = -1;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -67,7 +62,6 @@ class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
                                     fontWeight: FontWeight.bold),
                               ),
                               ...attr.values.map((val) {
-                                index++;
                                 return Row(
                                   children: [
                                     Radio(
@@ -110,6 +104,9 @@ class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: TextFormField(
                     obscureText: !show,
+                    onChanged: (value) {
+                      User.password = value;
+                    },
                     decoration: InputDecoration(
                         labelText: lang == "En"
                             ? 'Reset Password'
@@ -140,7 +137,8 @@ class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
             child: ButtonWidget(
               text: (lang == "En" ? 'Update' : 'تحديث'),
               navigate: () async {
-                final bool result = await UserCtr.updateStatistics();
+                final bool result =
+                    await UserCtr.updateStatistics(updatePassword);
                 if (result) {
                   showErrorDialog(
                       (lang == "En" ? "Updated Successfully" : "تم التعديل"),

@@ -21,7 +21,6 @@ class Track {
 }
 
 class CandidatesModel {
-  static int totalVoters = 75;
   static Map<String, Track> tracks = {};
 
   static void storeTracks(List<dynamic> data) {

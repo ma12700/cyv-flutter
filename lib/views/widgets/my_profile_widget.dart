@@ -4,7 +4,6 @@ import 'package:cyv/models/user.dart';
 import 'package:cyv/views/widgets/profiles/profileData.dart';
 import 'package:cyv/views/widgets/profiles/updateProfile.dart';
 import 'package:flutter/material.dart';
-import 'profiles/taskrow.dart';
 import 'profiles/write_Program_screen.dart';
 
 class MyProfileWidget extends StatefulWidget {

@@ -15,7 +15,9 @@ class UserCtr {
       });
       var data = json.decode(response.body);
       User.storeProgramData(data);
-      ChartData.storeResultAnalysis(data['voters']);
+      if (Periods.time == Time.result) {
+        ChartData.storeResultAnalysis(data['voters']);
+      }
       programFetched = true;
     }
     return true;
@@ -32,13 +34,18 @@ class UserCtr {
     return true;
   }
 
-  static Future<bool> updateStatistics() async {
+  static Future<bool> updateStatistics(bool flag) async {
     List<Map<String, String>> statistics = [];
     User.attributesValues.forEach((attr) {
       if (attr.update) {
         statistics.add({"key": attr.key, "value": attr.answer});
       }
     });
+    Map<String, dynamic> body = {"statistics": statistics};
+    if (flag) {
+      body['password'] = User.password;
+    }
+
     print(statistics);
     var url = Uri.parse(AuthCtr.baseUrl + 'user/updateStatistics');
     final response = await http.put(url,
@@ -46,7 +53,7 @@ class UserCtr {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': User.token
         },
-        body: json.encode({"statistics": statistics}));
+        body: json.encode(body));
     if (response.statusCode == 200) {
       statistics.forEach((attr) {
         User.otherAttributes[attr['key']] = attr['value'];

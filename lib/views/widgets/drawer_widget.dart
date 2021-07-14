@@ -1,4 +1,8 @@
+import 'package:cyv/models/analysis.dart';
+import 'package:cyv/models/candidates.dart';
+import 'package:cyv/models/infoPages.dart';
 import 'package:cyv/models/language.dart';
+import 'package:cyv/models/requirements.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user.dart';
 import 'package:cyv/views/screens/login_screen.dart';
@@ -66,11 +70,18 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   choiceWidget(Icons.home, "Home", context),
                   choiceWidget(Icons.group, "Candidates", context),
-                  choiceWidget(Icons.recent_actors, "Cnadidature", context),
-                  choiceWidget(Icons.warning, "Waiving", context),
-                  choiceWidget(Icons.contacts, "Voting", context),
-                  choiceWidget(Icons.insert_chart, "Result", context),
-                  choiceWidget(Icons.insert_chart, "statistics", context),
+                  if (User.type == "Voter" &&
+                      !User.isCandidature &&
+                      Periods.time == Time.candidature)
+                    choiceWidget(Icons.recent_actors, "Cnadidature", context),
+                  if (User.type == "Candidate" && Periods.time == Time.waiving)
+                    choiceWidget(Icons.warning, "Waiving", context),
+                  if (Periods.time == Time.voting)
+                    choiceWidget(Icons.contacts, "Voting", context),
+                  if (Periods.time == Time.result)
+                    choiceWidget(Icons.insert_chart, "Result", context),
+                  if (User.type == "Candidate")
+                    choiceWidget(Icons.insert_chart, "statistics", context),
                   choiceWidget(Icons.person, "My profile", context),
                   choiceWidget(Icons.help, "Help", context),
                 ],
@@ -94,6 +105,17 @@ class AppDrawer extends StatelessWidget {
           select(text);
           Navigator.of(context).pop();
         } else {
+          if (Periods.timer != null) {
+            Periods.timer.cancel();
+            Periods.timer = null;
+          }
+          User.token = null;
+          ChartData.clearData();
+          CandidatesModel.tracks.clear();
+          InfoPageModel.pages.clear();
+          RequirementsModel.requirements.clear();
+          User.otherAttributes.clear();
+          User.attributesValues.clear();
           Navigator.of(context).pop();
           Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
         }

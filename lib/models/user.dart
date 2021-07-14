@@ -1,3 +1,5 @@
+import 'dart:async';
+
 class Attribute {
   final String key;
   final bool update;
@@ -5,6 +7,53 @@ class Attribute {
   String answer = "";
 
   Attribute(this.key, this.update, this.values, this.answer);
+}
+
+enum Time { before, candidature, noThing, waiving, voting, result }
+
+class Periods {
+  static DateTime candidatureStart;
+  static DateTime candidatureEnd;
+  static DateTime waiverStart;
+  static DateTime waiverEnd;
+  static DateTime votingStart;
+  static DateTime votingEnd;
+  static DateTime serverDate;
+  static Time time;
+  static Timer timer;
+
+  static void calculateTime(Function change) {
+    if (serverDate.isBefore(candidatureStart)) {
+      time = Time.before;
+      changeTime(serverDate, candidatureStart, change);
+    } else if (serverDate.isBefore(candidatureEnd)) {
+      time = Time.candidature;
+      changeTime(serverDate, candidatureEnd, change);
+    } else if (serverDate.isBefore(waiverStart)) {
+      time = Time.noThing;
+      changeTime(serverDate, waiverStart, change);
+    } else if (serverDate.isAfter(waiverStart) &&
+        serverDate.isBefore(waiverEnd)) {
+      time = Time.waiving;
+      changeTime(serverDate, waiverEnd, change);
+    } else if (serverDate.isBefore(votingStart)) {
+      time = Time.noThing;
+      changeTime(serverDate, votingStart, change);
+    } else if (serverDate.isAfter(votingStart) &&
+        serverDate.isBefore(votingEnd)) {
+      time = Time.voting;
+      changeTime(serverDate, votingEnd, change);
+    } else if (serverDate.isAfter(votingEnd)) {
+      time = Time.result;
+    }
+  }
+
+  static void changeTime(DateTime now, DateTime end, Function change) {
+    timer = Timer(Duration(minutes: end.difference(now).inMinutes), () {
+      serverDate = end.add(Duration(minutes: 1));
+      change('Home');
+    });
+  }
 }
 
 class User {
@@ -23,7 +72,6 @@ class User {
   static String facebookURL = "";
   static String twitterURL = "";
   static String trackID = "";
-  static String time = "Result";
   static Map<String, dynamic> otherAttributes = {};
   static List<Attribute> attributesValues = [];
 
@@ -40,6 +88,17 @@ class User {
       var attr = attribute as Map<String, dynamic>;
       otherAttributes[attr['key']] = attr['value'];
     });
+    Periods.candidatureStart =
+        DateTime.parse(data['electionPeriods']['candidatureStart']);
+    Periods.candidatureEnd =
+        DateTime.parse(data['electionPeriods']['candidatureEnd']);
+    Periods.waiverStart =
+        DateTime.parse(data['electionPeriods']['waiverStart']);
+    Periods.waiverEnd = DateTime.parse(data['electionPeriods']['waiverEnd']);
+    Periods.votingStart =
+        DateTime.parse(data['electionPeriods']['votingStart']);
+    Periods.votingEnd = DateTime.parse(data['electionPeriods']['votingEnd']);
+    Periods.serverDate = DateTime.parse(data['serverDate']);
   }
 
   static void storeProgramData(Map<String, dynamic> data) {

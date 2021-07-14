@@ -99,7 +99,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   BottomNavigationBar bottomBar() {
-    if (bodywidget == "statistics" && User.time == "Result") {
+    if (bodywidget == "statistics" && Periods.time == Time.result) {
       return BottomNavigationBar(
           selectedItemColor: Style.primaryColor,
           currentIndex: barIndex,
@@ -146,6 +146,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Periods.calculateTime(changeBody);
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(

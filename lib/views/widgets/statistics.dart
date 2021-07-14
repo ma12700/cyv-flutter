@@ -53,7 +53,7 @@ class ChartsWidget extends StatelessWidget {
           ),
           Container(
             child: Text(
-              "ACTUAL Data",
+              index == 0 ? "All Voters" : "Result",
             ),
             alignment: Alignment.center,
             margin: EdgeInsets.symmetric(vertical: 20),

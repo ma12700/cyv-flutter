@@ -96,4 +96,13 @@ class ChartData {
       ];
     });
   }
+
+  static void clearData() {
+    allUserAnalysisSeries.clear();
+    resultAnalysisSeries.clear();
+    allUserAnalysis.clear();
+    resultAnalysis.clear();
+    allUserYdomainLabel.clear();
+    resultYdomainLabel.clear();
+  }
 }

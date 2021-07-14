@@ -11,7 +11,6 @@ class Requirement {
 
 class RequirementsModel {
   static List<Requirement> requirements = [];
-  static List<Map<String, dynamic>> request = [];
 
   static void storeRequirements(List<dynamic> data) async {
     requirements.clear();
