@@ -29,9 +29,9 @@ class TracksWidget extends StatelessWidget {
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                        isCandidature
+                        (isCandidature
                             ? CandidatureForm.routeName
-                            : CandidatesScreen.routeName,
+                            : CandidatesScreen.routeName),
                         arguments: keys[index]);
                   },
                   child: Card(

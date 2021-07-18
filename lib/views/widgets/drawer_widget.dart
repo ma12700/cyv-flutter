@@ -110,6 +110,7 @@ class AppDrawer extends StatelessWidget {
             Periods.timer = null;
           }
           User.token = null;
+          Periods.clearTime();
           ChartData.clearData();
           CandidatesModel.tracks.clear();
           InfoPageModel.pages.clear();

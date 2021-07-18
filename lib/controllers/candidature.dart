@@ -19,37 +19,33 @@ class CandidatureCtr {
   }
 
   //send images with requirements
-  static Future<void> sendRequest(String trackID) async {
+  static Future<bool> sendRequest(String trackID) async {
+    int counter = 0;
     var url = Uri.parse(AuthCtr.baseUrl + 'request/addRequest/' + trackID);
     var request = new http.MultipartRequest("POST", url);
-
-    RequirementsModel.requirements.forEach((require) async {
+    int length = RequirementsModel.requirements.length;
+    for (int i = 0; i < length; i++) {
+      var require = RequirementsModel.requirements[i];
       if (require.type == "Image") {
         var stream = new http.ByteStream(require.file.openRead());
         stream.cast();
         var length = await require.file.length();
-        var multipartFile = new http.MultipartFile('file', stream, length,
+        var multipartFile = new http.MultipartFile(
+            require.title, stream, length,
             filename: require.file.path.split('/').last,
             contentType:
                 new MediaType('image', require.file.path.split('.').last));
 
         request.files.add(multipartFile);
       } else {
-        //request.fields.addAll({"email": User.email, "password": User.password});
+        request.fields["values[" + counter.toString() + "]"] =
+            '{"key": "${require.title}", "value": "${require.answer}"}';
+        i++;
       }
-    });
+    }
+    request.headers.addAll({'x-auth-token': User.token});
 
-    request.headers.addAll({
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-auth-token': User.token
-    });
-
-    await request.send().then((result) async {
-      http.Response.fromStream(result).then((response) {
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> data = json.decode(response.body);
-        }
-      });
-    }).catchError((err) {});
+    var response = await request.send();
+    return response.statusCode == 201;
   }
 }

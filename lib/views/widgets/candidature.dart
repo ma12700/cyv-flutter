@@ -2,6 +2,8 @@ import 'package:cyv/controllers/candidature.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/requirements.dart';
 import 'package:cyv/models/style.dart';
+import 'package:cyv/models/user.dart';
+import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/views/widgets/form/topPart.dart';
 import 'package:flutter/material.dart';
 import 'package:cyv/views/widgets/app_bar_widget.dart';
@@ -23,6 +25,7 @@ class CandidatureForm extends StatefulWidget {
 }
 
 class _CandidatureFormState extends State<CandidatureForm> {
+  String trackID;
   void setLanguage() {
     setState(() {
       lang = lang == "En" ? "ع" : "En";
@@ -32,6 +35,7 @@ class _CandidatureFormState extends State<CandidatureForm> {
 
   @override
   Widget build(BuildContext context) {
+    trackID = ModalRoute.of(context).settings.arguments;
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(
@@ -60,7 +64,20 @@ class _CandidatureFormState extends State<CandidatureForm> {
                   margin: EdgeInsets.all(20),
                   width: 120,
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        bool res = await CandidatureCtr.sendRequest(trackID);
+                        if (res) {
+                          User.isCandidature = true;
+                          showErrorDialog(
+                              lang == "En" ? "send successfuly" : "تم الارسال",
+                              context,
+                              title: "");
+                        } else {
+                          showErrorDialog(
+                              lang == "En" ? "An Error Occured" : "هناك خطأ",
+                              context);
+                        }
+                      },
                       child: Text("Send"),
                       style: ElevatedButton.styleFrom(
                         primary: Style.primaryColor,
@@ -86,6 +103,10 @@ class _CandidatureFormState extends State<CandidatureForm> {
                 margin: EdgeInsets.symmetric(vertical: 10),
                 child: TextFormField(
                     decoration: _inputDecoration(requirement.title),
+                    initialValue: requirement.answer,
+                    onChanged: (value) {
+                      requirement.answer = value;
+                    },
                     style: TextStyle(
                         color: Color.fromRGBO(242, 160, 61, 1), fontSize: 14.0),
                     keyboardType: keypoard(requirement.type)),

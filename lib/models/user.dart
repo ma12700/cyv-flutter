@@ -19,32 +19,36 @@ class Periods {
   static DateTime votingStart;
   static DateTime votingEnd;
   static DateTime serverDate;
-  static Time time;
+  static Time time = Time.before;
   static Timer timer;
 
   static void calculateTime(Function change) {
-    if (serverDate.isBefore(candidatureStart)) {
-      time = Time.before;
-      changeTime(serverDate, candidatureStart, change);
-    } else if (serverDate.isBefore(candidatureEnd)) {
-      time = Time.candidature;
-      changeTime(serverDate, candidatureEnd, change);
-    } else if (serverDate.isBefore(waiverStart)) {
-      time = Time.noThing;
-      changeTime(serverDate, waiverStart, change);
-    } else if (serverDate.isAfter(waiverStart) &&
-        serverDate.isBefore(waiverEnd)) {
-      time = Time.waiving;
-      changeTime(serverDate, waiverEnd, change);
-    } else if (serverDate.isBefore(votingStart)) {
-      time = Time.noThing;
-      changeTime(serverDate, votingStart, change);
-    } else if (serverDate.isAfter(votingStart) &&
-        serverDate.isBefore(votingEnd)) {
-      time = Time.voting;
-      changeTime(serverDate, votingEnd, change);
-    } else if (serverDate.isAfter(votingEnd)) {
-      time = Time.result;
+    print(time);
+    print(serverDate);
+    if (candidatureStart != null) {
+      if (serverDate.isBefore(candidatureStart)) {
+        time = Time.before;
+        changeTime(serverDate, candidatureStart, change);
+      } else if (serverDate.isBefore(candidatureEnd)) {
+        time = Time.candidature;
+        changeTime(serverDate, candidatureEnd, change);
+      } else if (serverDate.isBefore(waiverStart)) {
+        time = Time.noThing;
+        changeTime(serverDate, waiverStart, change);
+      } else if (serverDate.isAfter(waiverStart) &&
+          serverDate.isBefore(waiverEnd)) {
+        time = Time.waiving;
+        changeTime(serverDate, waiverEnd, change);
+      } else if (serverDate.isBefore(votingStart)) {
+        time = Time.noThing;
+        changeTime(serverDate, votingStart, change);
+      } else if (serverDate.isAfter(votingStart) &&
+          serverDate.isBefore(votingEnd)) {
+        time = Time.voting;
+        changeTime(serverDate, votingEnd, change);
+      } else if (serverDate.isAfter(votingEnd)) {
+        time = Time.result;
+      }
     }
   }
 
@@ -53,6 +57,16 @@ class Periods {
       serverDate = end.add(Duration(minutes: 1));
       change('Home');
     });
+  }
+
+  static void clearTime() {
+    candidatureStart = null;
+    candidatureEnd = null;
+    waiverStart = null;
+    waiverEnd = null;
+    votingStart = null;
+    votingEnd = null;
+    time = Time.before;
   }
 }
 
@@ -88,17 +102,19 @@ class User {
       var attr = attribute as Map<String, dynamic>;
       otherAttributes[attr['key']] = attr['value'];
     });
-    Periods.candidatureStart =
-        DateTime.parse(data['electionPeriods']['candidatureStart']);
-    Periods.candidatureEnd =
-        DateTime.parse(data['electionPeriods']['candidatureEnd']);
-    Periods.waiverStart =
-        DateTime.parse(data['electionPeriods']['waiverStart']);
-    Periods.waiverEnd = DateTime.parse(data['electionPeriods']['waiverEnd']);
-    Periods.votingStart =
-        DateTime.parse(data['electionPeriods']['votingStart']);
-    Periods.votingEnd = DateTime.parse(data['electionPeriods']['votingEnd']);
-    Periods.serverDate = DateTime.parse(data['serverDate']);
+    if (data['electionPeriods'] != null) {
+      Periods.candidatureStart =
+          DateTime.parse(data['electionPeriods']['candidatureStart']);
+      Periods.candidatureEnd =
+          DateTime.parse(data['electionPeriods']['candidatureEnd']);
+      Periods.waiverStart =
+          DateTime.parse(data['electionPeriods']['waiverStart']);
+      Periods.waiverEnd = DateTime.parse(data['electionPeriods']['waiverEnd']);
+      Periods.votingStart =
+          DateTime.parse(data['electionPeriods']['votingStart']);
+      Periods.votingEnd = DateTime.parse(data['electionPeriods']['votingEnd']);
+      Periods.serverDate = DateTime.parse(data['serverDate']);
+    }
   }
 
   static void storeProgramData(Map<String, dynamic> data) {
