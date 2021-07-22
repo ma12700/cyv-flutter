@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cyv/controllers/auth.dart';
 import 'package:cyv/controllers/contract.dart';
+import 'package:cyv/controllers/user.dart';
 import 'package:cyv/models/analysis.dart';
 import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/user.dart';
@@ -31,6 +32,10 @@ class CandidatesCtr {
     });
     var data = json.decode(response.body);
     CandidatesModel.storeCandidates(trackID, data);
+    if (Periods.time == Time.result) {
+      await ContractCtr.getResult(trackID,
+          User.otherAttributes[CandidatesModel.tracks[trackID].dividedBy]);
+    }
 
     return true;
   }
@@ -105,6 +110,9 @@ class CandidatesCtr {
     if (CandidatesModel.tracks.isEmpty) {
       await fetchTracks();
     }
+    if (User.trackID == "") {
+      await UserCtr.fetchProgram();
+    }
     var url = Uri.parse(
         'https://floating-bastion-12576.herokuapp.com/statisticsAnalysis');
     final response = await http.post(url,
@@ -118,8 +126,6 @@ class CandidatesCtr {
               .otherAttributes[CandidatesModel.tracks[User.trackID].dividedBy],
         }));
     var data = json.decode(response.body);
-    print('end');
-    print(data);
     ChartData.storeAllUserAnalysis(data['userStatistics']);
 
     return true;

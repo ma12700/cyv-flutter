@@ -5,20 +5,16 @@ import 'package:cyv/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserCtr {
-  static bool programFetched = false;
   static Future<bool> fetchProgram() async {
-    if (!programFetched) {
-      var url = Uri.parse(AuthCtr.baseUrl + 'candidate/me');
-      final response = await http.get(url, headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': User.token
-      });
-      var data = json.decode(response.body);
-      User.storeProgramData(data);
-      if (Periods.time == Time.result) {
-        ChartData.storeResultAnalysis(data['voters']);
-      }
-      programFetched = true;
+    var url = Uri.parse(AuthCtr.baseUrl + 'candidate/me');
+    final response = await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-auth-token': User.token
+    });
+    var data = json.decode(response.body);
+    User.storeProgramData(data);
+    if (Periods.time == Time.result) {
+      ChartData.storeResultAnalysis(data['voters']);
     }
     return true;
   }

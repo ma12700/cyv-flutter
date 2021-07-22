@@ -13,31 +13,27 @@ class ContractCtr {
 
   static Future<DeployedContract> loadContract() async {
     String abi = await rootBundle.loadString("assets/ABI.json");
-    String contractAddress = "0x0305Fb935b21D10d2DB80d5c9a46E526565A4049";
+    String contractAddress = "0x205532EceF642CF8d9EDD11766103a2fc7B25104";
 
     final contract = DeployedContract(ContractAbi.fromJson(abi, "Election"),
         EthereumAddress.fromHex(contractAddress));
     return contract;
   }
 
-  static Future<bool> getResult() async {
+  static Future<void> getResult(String trackID, String dividedByValue) async {
     final contract = await loadContract();
-    final ethFunction = contract.function('returnResult');
-
-    CandidatesModel.tracks.forEach((key, _) async {
-      final response = await ethClient.call(
-        contract: contract,
-        function: ethFunction,
-        params: [key],
-      );
-      print(response);
-      int len = (response[0] as List<dynamic>).length;
+    final ethFunction = contract.function('returnMobileResult');
+    final response = await ethClient.call(
+      contract: contract,
+      function: ethFunction,
+      params: [trackID, dividedByValue],
+    );
+    CandidatesModel.storeResult(response, trackID);
+    /* int len = (response[0] as List<dynamic>).length;
       for (int i = 0; i < len; i++) {
-        CandidatesModel.tracks[key].candidates[response[0][i]].votesNumber =
+        CandidatesModel.tracks[trackID].candidates[response[0][i]].votesNumber =
             response[2][i];
-      }
-    });
-    return true;
+      } */
   }
 
   static Future<String> submit(String functionName, List<dynamic> args) async {

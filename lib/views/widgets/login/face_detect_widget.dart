@@ -20,7 +20,6 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
   List<Face> _faces = <Face>[];
   CameraController _camera;
   CameraLensDirection _direction = CameraLensDirection.front;
-  String text = "message";
   File file;
   bool isSend = false;
   @override
@@ -55,7 +54,13 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
         isSend = false;
       });
 
-      showErrorDialog((lang == "En" ? result : dictionary[lang]), context);
+      showErrorDialog(
+          (lang == "En"
+              ? result
+              : result.toString().contains("face")
+                  ? dictionary["NF"]
+                  : dictionary["WEP"]),
+          context);
     }
   }
 
@@ -120,7 +125,6 @@ class _FaceSetectWidgetState extends State<FaceSetectWidget> {
                 navigate: faceDetect,
               )
             : CircularProgressIndicator(),
-        //file != null ? Image.file(file) : Text('null')
       ],
     );
   }

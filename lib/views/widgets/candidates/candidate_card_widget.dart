@@ -1,6 +1,7 @@
 import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
+import 'package:cyv/models/user.dart';
 import 'package:cyv/views/screens/candidate_profile_screen.dart';
 import 'package:cyv/views/widgets/candidates/resultInfo_widget.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,9 @@ class CandidateCardWidget extends StatelessWidget {
   final String trackID;
   final String candidateID;
   final Function vote;
-  CandidateCardWidget(this.trackID, this.candidateID, {this.vote});
+  final int totalCountVotes;
+  CandidateCardWidget(this.trackID, this.candidateID,
+      {this.vote, this.totalCountVotes});
   @override
   Widget build(BuildContext context) {
     Size deviseSize = MediaQuery.of(context).size;
@@ -62,35 +65,45 @@ class CandidateCardWidget extends StatelessWidget {
                               textAlign: TextAlign.center,
                               softWrap: true,
                             )),
-                        //if (User.time == "Votings")
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: candidate.isSelected
-                                    ? Style.buttonColor(Style.secondColor)
-                                    : flag
-                                        ? Style.buttonColor(Style.primaryColor)
-                                        : Style.buttonColor(Style.nullColor)),
-                            onPressed: flag || candidate.isSelected
-                                ? () {
-                                    vote(candidate, candidateID);
-                                  }
-                                : null,
-                            child: Text(
-                              lang == 'En'
-                                  ? (candidate.isSelected
-                                      ? 'Un-Select'
-                                      : 'Select')
-                                  : (candidate.isSelected
-                                      ? dictionary['Un-Select']
-                                      : dictionary['Select']),
-                              style: TextStyle(
-                                  color: Style.lightColor, fontSize: 15),
-                            ),
-                          ),
-                        ),
-                        ResultInfoWidget(Style.primaryColor, 70, 120, 1000)
+                        Periods.time == Time.voting && User.page != "Candidates"
+                            ? Container(
+                                padding: EdgeInsets.all(10),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor: candidate.isSelected
+                                          ? Style.buttonColor(Style.secondColor)
+                                          : flag
+                                              ? Style.buttonColor(
+                                                  Style.primaryColor)
+                                              : Style.buttonColor(
+                                                  Style.nullColor)),
+                                  onPressed: flag || candidate.isSelected
+                                      ? () {
+                                          vote(candidate, candidateID);
+                                        }
+                                      : null,
+                                  child: Text(
+                                    lang == 'En'
+                                        ? (candidate.isSelected
+                                            ? 'Un-Select'
+                                            : 'Select')
+                                        : (candidate.isSelected
+                                            ? dictionary['Un-Select']
+                                            : dictionary['Select']),
+                                    style: TextStyle(
+                                        color: Style.lightColor, fontSize: 15),
+                                  ),
+                                ),
+                              )
+                            : Periods.time == Time.result &&
+                                    User.page != "Candidates"
+                                ? ResultInfoWidget(
+                                    Style.primaryColor,
+                                    (candidate.votesNumber / totalCountVotes) *
+                                        100,
+                                    candidate.votesNumber,
+                                    totalCountVotes)
+                                : Container()
                       ],
                     ),
                   )),

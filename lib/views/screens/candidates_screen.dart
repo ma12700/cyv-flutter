@@ -1,6 +1,7 @@
 import 'package:cyv/controllers/candidate.dart';
 import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/language.dart';
+import 'package:cyv/models/user.dart';
 import 'package:cyv/views/widgets/app_bar_widget.dart';
 import 'package:cyv/views/widgets/candidates/candidate_card_widget.dart';
 import 'package:cyv/views/widgets/search_widget.dart';
@@ -13,6 +14,7 @@ class CandidatesScreen extends StatefulWidget {
 
 class _CandidatesScreenState extends State<CandidatesScreen> {
   String trackID;
+  bool load = true;
   // used when search about candidates
   void changeVisibility(String value) {
     CandidatesModel.tracks[trackID].candidates.forEach((key, candidate) {
@@ -26,6 +28,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
 
   void setLanguage() {
     setState(() {
+      load = false;
       lang = lang == "En" ? "ع" : "En";
       direction = lang == "En" ? TextDirection.ltr : TextDirection.rtl;
     });
@@ -33,6 +36,7 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
 
   void search(String value) {
     setState(() {
+      load = false;
       changeVisibility(value);
     });
   }
@@ -63,12 +67,16 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
         child: Scaffold(
             appBar: appBarWidget(setLanguage,
                 title: CandidatesModel.tracks[trackID].name),
-            body: CandidatesModel.tracks[trackID].candidates.isEmpty
-                ? loadCandidates()
-                : listOfCandidates()));
+            body: load ? loadCandidates() : listOfCandidates()));
   }
 
   Widget listOfCandidates() {
+    int totalCountVotes = 0;
+    if (Periods.time == Time.result) {
+      CandidatesModel.tracks[trackID].candidates.forEach((key, value) {
+        totalCountVotes += value.votesNumber;
+      });
+    }
     return Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(
@@ -82,7 +90,8 @@ class _CandidatesScreenState extends State<CandidatesScreen> {
               children: CandidatesModel.tracks[trackID].candidates.entries
                   .map((e) => Container(
                         child: e.value.isVisible
-                            ? CandidateCardWidget(trackID, e.key)
+                            ? CandidateCardWidget(trackID, e.key,
+                                totalCountVotes: totalCountVotes)
                             : Container(),
                       ))
                   .toList(),

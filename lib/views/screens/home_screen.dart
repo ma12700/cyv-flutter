@@ -29,12 +29,11 @@ class HomeScreenState extends State<HomeScreen> {
   String bodywidget = 'Home';
   int barIndex = 0;
   void changeBody(String value) {
-    if (bodywidget != value) {
-      setState(() {
-        bodywidget = value;
-        barIndex = 0;
-      });
-    }
+    setState(() {
+      bodywidget = value;
+      barIndex = 0;
+      User.page = value;
+    });
   }
 
   void setLanguage() {
@@ -147,6 +146,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Periods.calculateTime(changeBody);
+    Periods.time = Time.candidature;
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(

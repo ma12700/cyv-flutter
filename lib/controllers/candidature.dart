@@ -13,7 +13,6 @@ class CandidatureCtr {
       'x-auth-token': User.token
     });
     var data = json.decode(response.body);
-    print(data);
     RequirementsModel.storeRequirements(data);
     return true;
   }

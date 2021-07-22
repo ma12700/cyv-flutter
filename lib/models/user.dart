@@ -85,7 +85,8 @@ class User {
   static String program = "";
   static String facebookURL = "";
   static String twitterURL = "";
-  static String trackID = "";
+  static String trackID = "Home";
+  static String page = "";
   static Map<String, dynamic> otherAttributes = {};
   static List<Attribute> attributesValues = [];
 

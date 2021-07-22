@@ -20,6 +20,7 @@ _inputDecoration(label) => InputDecoration(
 
 class CandidatureForm extends StatefulWidget {
   static const routeName = 'Candidature form';
+  final _formKey = GlobalKey<FormState>();
   @override
   _CandidatureFormState createState() => _CandidatureFormState();
 }
@@ -65,6 +66,16 @@ class _CandidatureFormState extends State<CandidatureForm> {
                   width: 120,
                   child: ElevatedButton(
                       onPressed: () async {
+                        RequirementsModel.requirements.forEach((requirement) {
+                          if (requirement.type == "Image" &&
+                              requirement.file == null) {
+                            requirement.answer = "Add Image";
+                            return;
+                          }
+                        });
+                        if (!widget._formKey.currentState.validate()) {
+                          return;
+                        }
                         bool res = await CandidatureCtr.sendRequest(trackID);
                         if (res) {
                           User.isCandidature = true;
@@ -90,110 +101,166 @@ class _CandidatureFormState extends State<CandidatureForm> {
   }
 
   Widget requirementsWidget() {
-    return ListView.builder(
-        itemCount: RequirementsModel.requirements.length,
-        itemBuilder: (context, index) {
-          Requirement requirement = RequirementsModel.requirements[index];
-          switch (requirement.type) {
-            case 'Text':
-            case 'Email':
-            case 'Number':
-            case 'Date':
-              return Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: TextFormField(
-                    decoration: _inputDecoration(requirement.title),
-                    initialValue: requirement.answer,
-                    onChanged: (value) {
-                      requirement.answer = value;
-                    },
-                    style: TextStyle(
-                        color: Color.fromRGBO(242, 160, 61, 1), fontSize: 14.0),
-                    keyboardType: keypoard(requirement.type)),
-              );
-            case 'Select':
-              return Container(
-                  margin: EdgeInsets.symmetric(vertical: 15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Text(
-                        requirement.title,
-                        style: TextStyle(
-                            fontSize: 16.0, fontWeight: FontWeight.bold),
-                      ),
-                      DropdownButton(
-                          value: requirement.answer,
-                          items: requirement.values
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Container(width: 200, child: Text(value)),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              requirement.answer = value;
-                            });
-                          })
-                    ],
-                  ));
-            case 'Image':
-              return Container(
-                  margin: EdgeInsets.symmetric(vertical: 15),
-                  child: Container(
-                      child: Column(children: [
-                    Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            child: requirement.file != null
-                                ? Image.file(
-                                    requirement.file,
-                                    fit: BoxFit.fill,
-                                  )
-                                : Container(),
-                            margin: EdgeInsets.all(20),
-                            width: 80,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1, color: Style.darkColor)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 13, right: 20),
-                            child: Text(requirement.title),
-                          ),
-                          InkWell(
-                              onTap: () async {
-                                final file = await ImagePicker().getImage(
-                                  source: ImageSource.camera,
-                                  maxWidth: 600,
-                                );
+    return Form(
+        key: widget._formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: SingleChildScrollView(
+            key: Key("Candidature"),
+            child: Column(
+                children: RequirementsModel.requirements.map((requirement) {
+              switch (requirement.type) {
+                case 'Text':
+                case 'Email':
+                case 'Number':
+                case 'Date':
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: TextFormField(
+                        decoration: _inputDecoration(requirement.title +
+                            (requirement.type == "Date" ? "(YYYY-MM-DD)" : "")),
+                        initialValue: requirement.answer,
+                        validator: (value) {
+                          switch (requirement.type) {
+                            case "Email":
+                              bool emailValid = RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(value);
 
-                                if (file == null) {
-                                  return;
-                                }
+                              if (!emailValid) {
+                                return (lang == 'En'
+                                    ? "Enter valid Email"
+                                    : dictionary["EVE"]);
+                              }
+                              break;
+                            case "Number":
+                              if (num.tryParse(value) == null) {
+                                return (lang == 'En'
+                                    ? "Enter valid Number"
+                                    : dictionary["EVN"]);
+                              }
+                              break;
+                            case "Text":
+                              if (value == "") {
+                                return "Enter the answeer";
+                              }
+                              break;
+                            case "Date":
+                              try {
+                                DateTime.parse(value);
+                              } catch (e) {
+                                return "Enter Valid Date";
+                              }
+                              break;
+                          }
+
+                          return null;
+                        },
+                        onChanged: (value) {
+                          requirement.answer = value;
+                        },
+                        style: TextStyle(
+                            color: Color.fromRGBO(242, 160, 61, 1),
+                            fontSize: 14.0),
+                        keyboardType: keypoard(requirement.type)),
+                  );
+                case 'Select':
+                  return Container(
+                      margin: EdgeInsets.symmetric(vertical: 15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Text(
+                            requirement.title,
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
+                          DropdownButton(
+                              value: requirement.answer,
+                              items: requirement.values
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child:
+                                      Container(width: 200, child: Text(value)),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
                                 setState(() {
-                                  requirement.file = File(file.path);
+                                  requirement.answer = value;
                                 });
-                              },
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Icon(Icons.camera_alt),
-                                    Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        child: Text("Add"))
-                                  ]))
-                        ])
-                  ])));
-            default:
-              return Container(
-                  margin: EdgeInsets.all(10), child: Text('No Requirements'));
-          }
-        });
+                              })
+                        ],
+                      ));
+                case 'Image':
+                  return Container(
+                      margin: EdgeInsets.symmetric(vertical: 15),
+                      child: Container(
+                          child: Column(children: [
+                        Column(
+                          children: [
+                            Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    child: requirement.file != null
+                                        ? Image.file(
+                                            requirement.file,
+                                            fit: BoxFit.fill,
+                                          )
+                                        : Container(),
+                                    margin: EdgeInsets.all(20),
+                                    width: 80,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1, color: Style.darkColor)),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 13, right: 20),
+                                    child: Text(requirement.title),
+                                  ),
+                                  InkWell(
+                                      onTap: () async {
+                                        final file =
+                                            await ImagePicker().getImage(
+                                          source: ImageSource.camera,
+                                          maxWidth: 600,
+                                        );
+
+                                        if (file == null) {
+                                          return;
+                                        }
+                                        setState(() {
+                                          requirement.file = File(file.path);
+                                          requirement.answer = "";
+                                        });
+                                      },
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Icon(Icons.camera_alt),
+                                            Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20),
+                                                child: Text("Add"))
+                                          ]))
+                                ]),
+                            Text(
+                              requirement.answer,
+                              style: TextStyle(color: Colors.red),
+                            )
+                          ],
+                        )
+                      ])));
+                default:
+                  return Container(
+                      margin: EdgeInsets.all(10),
+                      child: Text('No Requirements'));
+              }
+            }).toList())));
   }
 
   TextInputType keypoard(String type) {

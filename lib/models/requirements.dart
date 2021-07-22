@@ -14,7 +14,6 @@ class RequirementsModel {
 
   static void storeRequirements(List<dynamic> data) async {
     requirements.clear();
-    print(data[0]['requirements']);
     (data[0]['requirements'] as List<dynamic>).forEach((requirement) {
       print(requirement);
       var values = (requirement['values'] as List<dynamic>)

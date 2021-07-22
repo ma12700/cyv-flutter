@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 class Candidate {
   String name;
   String img;
@@ -66,5 +68,27 @@ class CandidatesModel {
                 candidate['program']);
       });
     });
+  }
+
+  static void storeResult(List<dynamic> result, String trackID) {
+    try {
+      List ids = result[0];
+      List votesCount = result[1];
+      int len = ids.length;
+      for (int i = 0; i < len; i++) {
+        tracks[trackID].candidates[ids[i]].votesNumber =
+            int.parse(votesCount[i]);
+      }
+      var sort = SplayTreeMap.from(
+          tracks[trackID].candidates,
+          (a, b) => tracks[trackID].candidates[a].votesNumber <
+                  tracks[trackID].candidates[b].votesNumber
+              ? 1
+              : -1);
+      tracks[trackID].candidates.clear();
+      sort.forEach((key, value) {
+        tracks[trackID].candidates[key] = value;
+      });
+    } catch (e) {}
   }
 }

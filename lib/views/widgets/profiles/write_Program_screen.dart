@@ -41,16 +41,14 @@ class _WriteProgramScreenState extends State<WriteProgramScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return !UserCtr.programFetched
-        ? FutureBuilder(
-            future: UserCtr.fetchProgram(),
-            builder: (ctx, fetchResultSnapshot) =>
-                fetchResultSnapshot.connectionState == ConnectionState.waiting
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : body())
-        : body();
+    return FutureBuilder(
+        future: UserCtr.fetchProgram(),
+        builder: (ctx, fetchResultSnapshot) =>
+            fetchResultSnapshot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : body());
   }
 
   Widget body() {

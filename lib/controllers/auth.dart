@@ -44,9 +44,11 @@ class AuthCtr {
 
   static Future<int> resetPassword() async {
     var url = Uri.parse(baseUrl + 'auth/forgetPassword');
-    var response = await http.post(url, headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
+    var response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode({"email": User.email}));
     return response.statusCode;
   }
 }
