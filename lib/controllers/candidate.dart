@@ -71,8 +71,6 @@ class CandidatesCtr {
         .map((track) => {"track": track.key, "candidates": track.value.votes})
         .toList();
 
-    print(body);
-
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -80,22 +78,20 @@ class CandidatesCtr {
         },
         body: json.encode(body));
     print(response.statusCode);
-    if (response.statusCode == 200) {
-      List<String> tracksKeys = CandidatesModel.tracks.keys;
-      print(tracksKeys);
+    if (response.statusCode == 201) {
+      var tracksKeys = CandidatesModel.tracks.keys.map((e) => e).toList();
       List<String> votes = [];
       List<BigInt> noWinners = [];
       tracksKeys.forEach((key) async {
-        votes.addAll(CandidatesModel.tracks[key].votes);
+        CandidatesModel.tracks[key].votes.forEach((candidate) {
+          votes.add(candidate);
+        });
         noWinners.add(BigInt.from(CandidatesModel.tracks[key].numberOfWinners));
       });
-      print(votes);
-      print(noWinners);
-      print(votes);
       await ContractCtr.submit(
           "vote", [User.nid, tracksKeys, noWinners, votes]);
     }
-    return response.statusCode == 200;
+    return response.statusCode == 201;
   }
 
   static Future<bool> updateProgram() async {
