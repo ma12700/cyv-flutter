@@ -23,6 +23,9 @@ class CandidateCardWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () {
+        if (Periods.time == Time.voting) {
+          return;
+        }
         Navigator.of(context).pushNamed(CandidateProfileScreen.routeName,
             arguments: [trackID, candidateID]);
       },

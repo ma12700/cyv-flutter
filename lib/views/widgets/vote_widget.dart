@@ -1,9 +1,12 @@
+import 'package:cyv/controllers/candidate.dart';
 import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/language.dart';
 import 'package:cyv/models/style.dart';
+import 'package:cyv/models/user.dart';
 import 'package:cyv/views/widgets/button_widget.dart';
 import 'package:cyv/views/widgets/candidates/candidate_card_widget.dart';
 import 'package:cyv/views/widgets/candidates/title_card.dart';
+import 'package:cyv/views/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class VoteWidget extends StatefulWidget {
@@ -14,6 +17,7 @@ class _VoteWidgetState extends State<VoteWidget> {
   var trackKeys;
   var candidatesKeys;
   int _trackIndex = 0;
+  bool isSend = false;
   int n = CandidatesModel.tracks.length;
   final ScrollController scrollController = ScrollController();
   @override
@@ -77,26 +81,50 @@ class _VoteWidgetState extends State<VoteWidget> {
                       },
                     )
                   : Container(),
-              ButtonWidget(
-                text: _trackIndex == n - 1
-                    ? (lang == 'En' ? 'Cast Vote' : dictionary['CV'])
-                    : (lang == 'En' ? 'Next' : dictionary['Next']),
-                navigate: CandidatesModel
-                            .tracks[trackKeys[_trackIndex]].votes.length ==
-                        CandidatesModel
-                            .tracks[trackKeys[_trackIndex]].numberOfWinners
-                    ? () async {
-                        if (_trackIndex != n - 1) {
-                          setState(() {
-                            changeTrack(true);
-                            scrollController.jumpTo(0);
-                          });
-                        } else {
-                          //bool result = await CandidatesModel.vote();
-                        }
-                      }
-                    : null,
-              )
+              isSend
+                  ? CircularProgressIndicator()
+                  : ButtonWidget(
+                      text: _trackIndex == n - 1
+                          ? (lang == 'En' ? 'Cast Vote' : dictionary['CV'])
+                          : (lang == 'En' ? 'Next' : dictionary['Next']),
+                      navigate: CandidatesModel.tracks[trackKeys[_trackIndex]]
+                                  .votes.length ==
+                              CandidatesModel.tracks[trackKeys[_trackIndex]]
+                                  .numberOfWinners
+                          ? () async {
+                              if (_trackIndex != n - 1) {
+                                setState(() {
+                                  changeTrack(true);
+                                  scrollController.jumpTo(0);
+                                });
+                              } else {
+                                setState(() {
+                                  isSend = !isSend;
+                                });
+                                bool result = await CandidatesCtr.vote();
+                                if (result) {
+                                  User.state = true;
+                                  showErrorDialog(
+                                      lang == "En"
+                                          ? "send successfuly"
+                                          : "تم الارسال",
+                                      context,
+                                      title: "Succeed",
+                                      backToHome: true);
+                                } else {
+                                  showErrorDialog(
+                                      lang == "En"
+                                          ? "An Error Occured"
+                                          : "هناك خطأ",
+                                      context);
+                                }
+                                setState(() {
+                                  isSend = !isSend;
+                                });
+                              }
+                            }
+                          : null,
+                    )
             ],
           ),
         ),

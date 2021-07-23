@@ -70,9 +70,9 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   choiceWidget(Icons.home, "Home", context),
                   choiceWidget(Icons.group, "Candidates", context),
-                  if ( //User.type == "Voter" &&
-                  //!User.isCandidature &&
-                  Periods.time == Time.candidature)
+                  if (User.type == "Voter" &&
+                      !User.isCandidature &&
+                      Periods.time == Time.candidature)
                     choiceWidget(Icons.recent_actors, "Cnadidature", context),
                   if (User.type == "Candidate" && Periods.time == Time.waiving)
                     choiceWidget(Icons.warning, "Waiving", context),

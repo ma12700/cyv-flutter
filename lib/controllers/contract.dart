@@ -29,14 +29,9 @@ class ContractCtr {
       params: [trackID, dividedByValue],
     );
     CandidatesModel.storeResult(response, trackID);
-    /* int len = (response[0] as List<dynamic>).length;
-      for (int i = 0; i < len; i++) {
-        CandidatesModel.tracks[trackID].candidates[response[0][i]].votesNumber =
-            response[2][i];
-      } */
   }
 
-  static Future<String> submit(String functionName, List<dynamic> args) async {
+  static Future<void> submit(String functionName, List<dynamic> args) async {
     EthPrivateKey credentials = EthPrivateKey.fromHex(
         "df36cb6f8dde80c977896c2eaf0d51accd88adf1909c8db56add1eb9b32a7f27");
     DeployedContract contract = await loadContract();
@@ -47,8 +42,7 @@ class ContractCtr {
             contract: contract,
             function: ethFunction,
             parameters: args,
-            maxGas: 4000000),
+            maxGas: 5000000),
         fetchChainIdFromNetworkId: true);
-    return result;
   }
 }

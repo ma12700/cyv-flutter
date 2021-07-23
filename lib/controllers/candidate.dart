@@ -66,27 +66,34 @@ class CandidatesCtr {
 
   static Future<bool> vote() async {
     var url = Uri.parse(AuthCtr.baseUrl + 'candidate/vote');
+    var body = {};
+    body["result"] = CandidatesModel.tracks.entries
+        .map((track) => {"track": track.key, "candidates": track.value.votes})
+        .toList();
+
+    print(body);
+
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': User.token
         },
-        body: json.encode({
-          "result": CandidatesModel.tracks.entries
-              .map((track) =>
-                  {"track": track.key, "candidateID": track.value.votes})
-              .toList()
-        }));
+        body: json.encode(body));
+    print(response.statusCode);
     if (response.statusCode == 200) {
-      CandidatesModel.tracks.forEach((key, value) async {
-        await ContractCtr.submit("vote", [
-          User.nid,
-          key,
-          value.votes,
-          [value.dividedBy],
-          [User.otherAttributes[value.dividedBy]]
-        ]);
+      List<String> tracksKeys = CandidatesModel.tracks.keys;
+      print(tracksKeys);
+      List<String> votes = [];
+      List<BigInt> noWinners = [];
+      tracksKeys.forEach((key) async {
+        votes.addAll(CandidatesModel.tracks[key].votes);
+        noWinners.add(BigInt.from(CandidatesModel.tracks[key].numberOfWinners));
       });
+      print(votes);
+      print(noWinners);
+      print(votes);
+      await ContractCtr.submit(
+          "vote", [User.nid, tracksKeys, noWinners, votes]);
     }
     return response.statusCode == 200;
   }

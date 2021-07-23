@@ -3,6 +3,7 @@ import 'package:cyv/models/language.dart';
 import 'package:cyv/models/requirements.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user.dart';
+import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/views/widgets/form/topPart.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class CandidatureForm extends StatefulWidget {
 
 class _CandidatureFormState extends State<CandidatureForm> {
   String trackID;
+  bool isSend = false;
   void setLanguage() {
     setState(() {
       lang = lang == "En" ? "ع" : "En";
@@ -61,39 +63,63 @@ class _CandidatureFormState extends State<CandidatureForm> {
               Container(
                 alignment: Alignment.bottomRight,
                 width: double.infinity,
-                child: Container(
-                  margin: EdgeInsets.all(20),
-                  width: 120,
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        RequirementsModel.requirements.forEach((requirement) {
-                          if (requirement.type == "Image" &&
-                              requirement.file == null) {
-                            requirement.answer = "Add Image";
-                            return;
-                          }
-                        });
-                        if (!widget._formKey.currentState.validate()) {
-                          return;
-                        }
-                        bool res = await CandidatureCtr.sendRequest(trackID);
-                        if (res) {
-                          User.isCandidature = true;
-                          showErrorDialog(
-                              lang == "En" ? "send successfuly" : "تم الارسال",
-                              context,
-                              title: "");
-                        } else {
-                          showErrorDialog(
-                              lang == "En" ? "An Error Occured" : "هناك خطأ",
-                              context);
-                        }
-                      },
-                      child: Text("Send"),
-                      style: ElevatedButton.styleFrom(
-                        primary: Style.primaryColor,
-                      )),
-                ),
+                child: !isSend
+                    ? Container(
+                        margin: EdgeInsets.all(20),
+                        width: 120,
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                isSend = true;
+                              });
+                              RequirementsModel.requirements
+                                  .forEach((requirement) {
+                                if (requirement.type == "Image" &&
+                                    requirement.file == null) {
+                                  requirement.answer = "Add Image";
+                                  setState(() {
+                                    isSend = false;
+                                  });
+                                  return;
+                                }
+                              });
+                              if (!widget._formKey.currentState.validate()) {
+                                setState(() {
+                                  isSend = false;
+                                });
+                                return;
+                              }
+                              bool res =
+                                  await CandidatureCtr.sendRequest(trackID);
+                              if (res) {
+                                User.isCandidature = true;
+                                showErrorDialog(
+                                    lang == "En"
+                                        ? "send successfuly"
+                                        : "تم الارسال",
+                                    context,
+                                    title: "Succeed",
+                                    backToHome: true);
+                              } else {
+                                showErrorDialog(
+                                    lang == "En"
+                                        ? "An Error Occured"
+                                        : "هناك خطأ",
+                                    context);
+                              }
+                              setState(() {
+                                isSend = false;
+                              });
+                            },
+                            child: Text("Send"),
+                            style: ElevatedButton.styleFrom(
+                              primary: Style.primaryColor,
+                            )),
+                      )
+                    : Container(
+                        margin:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                        child: CircularProgressIndicator()),
               )
             ],
           ),
