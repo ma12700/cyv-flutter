@@ -76,7 +76,7 @@ class AppDrawer extends StatelessWidget {
                     choiceWidget(Icons.recent_actors, "Cnadidature", context),
                   if (User.type == "Candidate" && Periods.time == Time.waiving)
                     choiceWidget(Icons.warning, "Waiving", context),
-                  if (Periods.time == Time.voting)
+                  if (Periods.time == Time.voting && !User.state)
                     choiceWidget(Icons.contacts, "Voting", context),
                   if (Periods.time == Time.result)
                     choiceWidget(Icons.insert_chart, "Result", context),
