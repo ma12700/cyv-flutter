@@ -9,6 +9,7 @@ class Candidate {
   String program;
   bool isVisible = true;
   bool isSelected = false;
+  bool winner = false;
   Candidate(this.name, this.img, this.votesNumber, this.facebookUrl,
       this.twitterUrl, this.program);
 }
@@ -86,8 +87,15 @@ class CandidatesModel {
               ? 1
               : -1);
       tracks[trackID].candidates.clear();
+      int i = 0;
       sort.forEach((key, value) {
-        tracks[trackID].candidates[key] = value;
+        if (i < tracks[trackID].numberOfWinners) {
+          tracks[trackID].candidates[key] = value;
+          tracks[trackID].candidates[key].winner = true;
+          i++;
+        } else {
+          tracks[trackID].candidates[key] = value;
+        }
       });
     } catch (e) {}
   }

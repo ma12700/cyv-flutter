@@ -128,7 +128,27 @@ class CandidateCardWidget extends StatelessWidget {
                           image: NetworkImage(candidate.img),
                           fit: BoxFit.fill)),
                 ),
-              )
+              ),
+              User.page == "Result" && candidate.winner
+                  ? Container(
+                      margin: EdgeInsets.all(10),
+                      width: 80,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            Icons.star,
+                            color: Style.thirdColor,
+                          ),
+                          Text(
+                            "Winner",
+                            style: TextStyle(
+                                color: Style.thirdColor, fontSize: 18),
+                          )
+                        ],
+                      ),
+                    )
+                  : Container()
             ],
           ),
         ),

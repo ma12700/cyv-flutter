@@ -13,6 +13,7 @@ class UpdateProfileWidget extends StatefulWidget {
 class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
   bool updatePassword = false;
   bool show = false;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -102,32 +103,44 @@ class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
         updatePassword
             ? Container(
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: TextFormField(
-                    obscureText: !show,
-                    onChanged: (value) {
-                      User.password = value;
-                    },
-                    decoration: InputDecoration(
-                        labelText: lang == "En"
-                            ? 'Reset Password'
-                            : 'تغيير الرم السرى',
-                        fillColor: Style.lightColor,
-                        suffixIcon: IconButton(
-                          icon: show
-                              ? Icon(Icons.visibility_off)
-                              : Icon(Icons.visibility),
-                          onPressed: () {
-                            setState(() {
-                              show = !show;
-                            });
-                          },
-                        ),
-                        border: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(18.0),
-                            borderSide: new BorderSide())),
-                    style: TextStyle(
-                        color: Color.fromRGBO(242, 160, 61, 1), fontSize: 14.0),
-                    keyboardType: TextInputType.text),
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                      obscureText: !show,
+                      onChanged: (value) {
+                        User.password = value;
+                      },
+                      validator: (value) {
+                        if (value.length <= 4) {
+                          return (lang == 'En'
+                              ? "The length of password must be at least 5"
+                              : dictionary['TLP']);
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          labelText: lang == "En"
+                              ? 'Reset Password'
+                              : 'تغيير الرم السرى',
+                          fillColor: Style.lightColor,
+                          suffixIcon: IconButton(
+                            icon: show
+                                ? Icon(Icons.visibility_off)
+                                : Icon(Icons.visibility),
+                            onPressed: () {
+                              setState(() {
+                                show = !show;
+                              });
+                            },
+                          ),
+                          border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(18.0),
+                              borderSide: new BorderSide())),
+                      style: TextStyle(
+                          color: Color.fromRGBO(242, 160, 61, 1),
+                          fontSize: 14.0),
+                      keyboardType: TextInputType.text),
+                ),
               )
             : Container(),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -137,6 +150,9 @@ class _UpdateProfileWidgetState extends State<UpdateProfileWidget> {
             child: ButtonWidget(
               text: (lang == "En" ? 'Update' : 'تحديث'),
               navigate: () async {
+                if (updatePassword && !_formKey.currentState.validate()) {
+                  return;
+                }
                 final bool result =
                     await UserCtr.updateStatistics(updatePassword);
                 if (result) {

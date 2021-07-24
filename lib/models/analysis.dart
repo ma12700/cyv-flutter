@@ -1,6 +1,8 @@
 // import 'package:charts_fl';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:cyv/models/candidates.dart';
 import 'package:cyv/models/style.dart';
+import 'package:cyv/models/user.dart';
 
 class SubscriberSeries {
   final String title;
@@ -62,18 +64,20 @@ class ChartData {
     int max = 0;
     data.forEach((element) {
       var keyValuePair = (element['key'] as String).split('.');
-      if (!resultAnalysis.containsKey(keyValuePair[0])) {
-        resultAnalysis[keyValuePair[0]] = [];
+      if (keyValuePair[0] != CandidatesModel.tracks[User.trackID].dividedBy) {
+        if (!resultAnalysis.containsKey(keyValuePair[0])) {
+          resultAnalysis[keyValuePair[0]] = [];
+        }
+        if (max < element['value']) {
+          max = element['value'];
+        }
+        resultAnalysis[keyValuePair[0]].add(SubscriberSeries(
+            keyValuePair[1],
+            element['value'],
+            charts.ColorUtil.fromDartColor(
+              Style.primaryColor,
+            )));
       }
-      if (max < element['value']) {
-        max = element['value'];
-      }
-      resultAnalysis[keyValuePair[0]].add(SubscriberSeries(
-          keyValuePair[1],
-          element['value'],
-          charts.ColorUtil.fromDartColor(
-            Style.primaryColor,
-          )));
     });
     resultYdomainLabel.clear();
     for (var i = 0; i <= (max + 10); i += 20) {
