@@ -77,7 +77,7 @@ class CandidatesCtr {
           'x-auth-token': User.token
         },
         body: json.encode(body));
-        
+
     if (response.statusCode == 201) {
       var tracksKeys = CandidatesModel.tracks.keys.map((e) => e).toList();
       List<String> votes = [];

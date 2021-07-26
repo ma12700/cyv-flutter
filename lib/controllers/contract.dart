@@ -36,7 +36,7 @@ class ContractCtr {
         "df36cb6f8dde80c977896c2eaf0d51accd88adf1909c8db56add1eb9b32a7f27");
     DeployedContract contract = await loadContract();
     final ethFunction = contract.function(functionName);
-    final result = await ethClient.sendTransaction(
+    await ethClient.sendTransaction(
         credentials,
         Transaction.callContract(
             contract: contract,

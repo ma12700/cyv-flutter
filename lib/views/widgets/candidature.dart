@@ -3,7 +3,6 @@ import 'package:cyv/models/language.dart';
 import 'package:cyv/models/requirements.dart';
 import 'package:cyv/models/style.dart';
 import 'package:cyv/models/user.dart';
-import 'package:cyv/views/screens/home_screen.dart';
 import 'package:cyv/views/widgets/dialog.dart';
 import 'package:cyv/views/widgets/form/topPart.dart';
 import 'package:flutter/material.dart';
