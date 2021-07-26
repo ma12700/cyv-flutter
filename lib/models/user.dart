@@ -23,9 +23,10 @@ class Periods {
   static Timer timer;
 
   static void calculateTime(Function change) {
-    print(time);
     print(serverDate);
-    if (candidatureStart != null) {
+    print(time);
+    if (candidatureStart != null && timer == null) {
+      print("Function calculateTime");
       if (serverDate.isBefore(candidatureStart)) {
         time = Time.before;
         changeTime(serverDate, candidatureStart, change);
@@ -35,15 +36,13 @@ class Periods {
       } else if (serverDate.isBefore(waiverStart)) {
         time = Time.noThing;
         changeTime(serverDate, waiverStart, change);
-      } else if (serverDate.isAfter(waiverStart) &&
-          serverDate.isBefore(waiverEnd)) {
+      } else if (serverDate.isBefore(waiverEnd)) {
         time = Time.waiving;
         changeTime(serverDate, waiverEnd, change);
       } else if (serverDate.isBefore(votingStart)) {
         time = Time.noThing;
         changeTime(serverDate, votingStart, change);
-      } else if (serverDate.isAfter(votingStart) &&
-          serverDate.isBefore(votingEnd)) {
+      } else if (serverDate.isBefore(votingEnd)) {
         time = Time.voting;
         changeTime(serverDate, votingEnd, change);
       } else if (serverDate.isAfter(votingEnd)) {
@@ -54,7 +53,11 @@ class Periods {
 
   static void changeTime(DateTime now, DateTime end, Function change) {
     timer = Timer(Duration(minutes: end.difference(now).inMinutes), () {
-      serverDate = end.add(Duration(minutes: 1));
+      serverDate = serverDate = end.add(Duration(seconds: 10));
+      if (timer != null) {
+        timer.cancel();
+        timer = null;
+      }
       change('Home');
     });
   }
@@ -66,6 +69,11 @@ class Periods {
     waiverEnd = null;
     votingStart = null;
     votingEnd = null;
+    serverDate = null;
+    if (timer != null) {
+      timer.cancel();
+      timer = null;
+    }
     time = Time.before;
   }
 }
@@ -114,7 +122,8 @@ class User {
       Periods.votingStart =
           DateTime.parse(data['electionPeriods']['votingStart']);
       Periods.votingEnd = DateTime.parse(data['electionPeriods']['votingEnd']);
-      Periods.serverDate = DateTime.parse(data['serverDate']);
+      Periods.serverDate =
+          DateTime.parse(data['serverDate']).add(Duration(hours: 2));
     }
   }
 

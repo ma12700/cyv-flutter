@@ -146,7 +146,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Periods.calculateTime(changeBody);
-    Periods.time = Time.result;
+    //Periods.time = Time.result;
     return Directionality(
         textDirection: (lang == "En" ? TextDirection.ltr : TextDirection.rtl),
         child: Scaffold(
