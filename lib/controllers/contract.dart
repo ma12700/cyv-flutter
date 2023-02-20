@@ -43,6 +43,6 @@ class ContractCtr {
             function: ethFunction,
             parameters: args,
             maxGas: 5000000),
-        fetchChainIdFromNetworkId: true);
+        fetchChainIdFromNetworkId: true,chainId: null);
   }
 }
